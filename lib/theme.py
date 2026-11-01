@@ -96,6 +96,8 @@ def resolve(cfg):
         "SWITCHER_R": cfg["switcher"]["corner_radius"],
         "SWITCHER_DIALOG": "icons" if cfg["switcher"]["style"] == "icons" else "list",
         "FM_VIEW": cfg["file_manager"]["list_view"],
+        "FM_BIG_ICON": cfg["file_manager"]["big_icon_size"],
+        "FM_SMALL_ICON": cfg["file_manager"]["small_icon_size"],
         "FONT_UI": cfg["fonts"]["ui"],
         "FONT_SIZE": cfg["fonts"]["ui_size"],
         "FONT_MONO": cfg["fonts"]["mono"],
@@ -182,6 +184,10 @@ def validate(cfg):
     for k, lo, hi in (("corner_radius", 0, 40), ("titlebar_font_size", 8, 16)):
         if not (lo <= int(cfg["window"][k]) <= hi):
             errs.append("window.%s must be %d..%d" % (k, lo, hi))
+    if not (16 <= int(cfg["file_manager"]["big_icon_size"]) <= 256):
+        errs.append("file_manager.big_icon_size must be 16..256")
+    if not (16 <= int(cfg["file_manager"]["small_icon_size"]) <= 64):
+        errs.append("file_manager.small_icon_size must be 16..64")
     if cfg["file_manager"]["list_view"] not in ("detailed", "icon", "compact", "thumbnail"):
         errs.append("file_manager.list_view must be detailed, icon, compact or thumbnail")
     if cfg["switcher"]["style"] not in ("icons", "list"):

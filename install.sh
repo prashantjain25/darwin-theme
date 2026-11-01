@@ -227,7 +227,8 @@ mod_pcmanfm() {
   info "Styling comes from the Kvantum module (list stripes, header, sidebar, location bar)."
   local f="$HOME/.config/pcmanfm-qt/lxqt/settings.conf"
   backup "$f"
-  run python3 "$REPO_DIR/lib/ini.py" "$f" FolderView "Mode=$FM_VIEW" "ShowHidden=false"
+  run python3 "$REPO_DIR/lib/ini.py" "$f" FolderView "Mode=$FM_VIEW" "ShowHidden=false" \
+      "BigIconSize=$FM_BIG_ICON" "SmallIconSize=$FM_SMALL_ICON"
   run python3 "$REPO_DIR/lib/ini.py" "$f" Window "SidePaneMode=places" "SidePaneVisible=true"   # Places list, not the directory tree
   warn "close the PCManFM-Qt windows to apply (log out for the desktop icons)"
 }

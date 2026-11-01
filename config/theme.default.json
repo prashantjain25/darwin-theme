@@ -35,6 +35,9 @@
 
   "file_manager": {
     "list_view": "detailed",
+    "big_icon_size": 48,
+    "small_icon_size": 16,
+    "_icon_size": "PCManFM-Qt Preferences > Display: big icons (icon view) and small icons (list view), in pixels: big 16-256, small 16-64.",
     "_list_view": "PCManFM-Qt folder view: detailed (list), icon, compact or thumbnail. PCManFM-Qt has no inline tree for file items, so the list is flat."
   },
 
