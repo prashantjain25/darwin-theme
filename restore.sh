@@ -35,5 +35,5 @@ case "${1:-latest}" in
   all) for t in $(list | sort -r); do restore_one "$t"; done;;
   *) restore_one "$1";;
 esac
-restart_picom; restart_panel; reconfigure_openbox
+restart_picom; restart_panel; reconfigure_openbox; restart_switcher
 info "Restored. Log out and back in (or restart apps) for Qt/GTK settings to reload."

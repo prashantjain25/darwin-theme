@@ -43,9 +43,11 @@
 
   "switcher": {
     "style": "icons",
-    "_style": "'icons' = one icon per window with the selected name below, as in macOS; 'list' = Openbox's text list.",
+    "background": "#dedede",
+    "foreground": "#1a1a1a",
+    "_style": "'icons' = native glass overlay with 88 px icons and a selected app label; 'list' = Openbox's text list. Run the switcher module after changing this.",
     "translucent": true,
-    "opacity": 88,
+    "opacity": 67,
     "corner_radius": 20,
     "_doc": "Alt+Tab window switcher: glass look through the compositor (opacity in %, with background blur). translucent=false keeps it opaque."
   },

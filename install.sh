@@ -5,7 +5,7 @@ set -euo pipefail
 # shellcheck source=lib/common.sh
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
-ALL_MODULES="fonts fontconfig kvantum gtk openbox lxqt picom pcmanfm lapce"
+ALL_MODULES="fonts fontconfig kvantum gtk openbox switcher lxqt picom pcmanfm lapce"
 ONLY=""; SKIP=""; CONFIGURE=0; NO_RESTART=0; PCMANFM_DETAILED=0
 
 usage() {
@@ -58,6 +58,9 @@ check_deps() {
   local c
   for c in python3 curl unzip git fc-cache fc-list openbox picom lxqt-panel pcmanfm-qt kvantummanager \
            gresource glib-compile-resources gtk-update-icon-cache gsettings xprop; do need_cmd "$c"; done
+  if want switcher && [ "$SWITCHER_DIALOG" = icons ]; then
+    if ! /usr/bin/python3 -c "import PyQt6" 2>/dev/null; then MISSING_PKGS+=(python3-pyqt6); fi
+  fi
   qt_style_plugins
   need_path "LXQt theme 'sombre-et-rond'" "install lxqt-themes (apt install lxqt-themes)" /usr/share/lxqt/themes/sombre-et-rond || MISSING_PKGS+=(lxqt-themes)
   local fams; fams="$(fc-list : family 2>/dev/null || true)"
@@ -202,6 +205,17 @@ mod_openbox() {
   [ "$found" = 1 ] || warn "no ~/.config/openbox/rc.xml found; select 'OpenboxSur-Dark-Custom' in LXQt Appearance > Openbox"
 }
 
+mod_switcher() {
+  step "Window switcher (native glass, 88 px icons, selected app label)"
+  local rc
+  for rc in "$HOME/.config/openbox/rc.xml" "$HOME/.config/openbox/lxqt-rc.xml" \
+            "$HOME/.local/bin/golden-gate-switcher" "$HOME/.config/autostart/golden-gate-switcher.desktop" \
+            "$HOME/.local/lib/golden-gate/window_switcher.py"; do
+    backup "$rc"
+  done
+  run python3 "$REPO_DIR/lib/switcher.py"
+}
+
 mod_lxqt() {
   step "LXQt (theme 'sombre-et-rond', icon theme, fonts, panel stylesheet)"
   local td="$HOME/.local/share/lxqt/themes/sombre-et-rond"
@@ -258,6 +272,7 @@ for m in $ALL_MODULES; do want "$m" && "mod_$m"; done
 if [ "$NO_RESTART" = 0 ]; then
   step "Reloading the session pieces"
   reconfigure_openbox
+  want switcher && restart_switcher
   want picom && restart_picom
   want lxqt && restart_panel
 fi

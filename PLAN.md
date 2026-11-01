@@ -58,6 +58,7 @@ _resources/ screenshots used by the README
 | 7 | Bundle Inter with its OFL license and install it only when missing | done |
 | 8 | README, third-party notices, screenshots | done |
 | 9 | Tests in a throw-away `$HOME` (dry-run, real run, light mode, bad config, wizard, restore) | done |
+| 9a | Native Qt/X11 glass switcher: selected app label, opaque icons, dependency/startup, reversible shortcuts; live keyboard tests | done |
 | 10 | Re-extract measurements from Apple's macOS 27 Figma kit (adds a real Dark Mode) and update the assets | open |
 | 11 | Verify light mode on screen, then drop the "experimental" label | open |
 | 12 | Global menu: evaluate a host for LXQt (e.g. a vala-panel based applet) and the Qt/GTK exporters | open |

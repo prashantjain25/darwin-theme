@@ -1,50 +1,28 @@
 backend = "glx";
 vsync = true;
 xrender-sync-fence = true;
-corner-radius = @WIN_R@;
-
-rounded-corners-exclude = [
-  "window_type = 'dock' && height = @BAR_H@",
-  "window_type = 'desktop'",
-  "class_g = 'lxqt-panel' && height = @BAR_H@",
-  "class_g = 'Polybar'",
-  "class_g = 'Plank'",
-  "_NET_WM_STATE@[0]:a = '_NET_WM_STATE_FULLSCREEN'"
-];
-
-shadow = true;
+force-win-blend = true;
 shadow-radius = 48;
-
-# --- Figma dark: glass, shadows, radii (golden-gate-lxqt-theme) ---
 shadow-opacity = 0.35;
 shadow-offset-x = 0;
 shadow-offset-y = 16;
-shadow-exclude = [
-  "window_type = 'popup_menu'",
-  "window_type = 'dropdown_menu'",
-  "window_type = 'menu'",
-  "window_type = 'tooltip'",
-  "window_type = 'combo'",
-  "window_type = 'dock'",
-  "window_type = 'desktop'",
-  "class_g = 'lxqt-panel'",
-  "class_g = 'Plank'",
-  "_GTK_FRAME_EXTENTS@:c"
-];
 blur-method = "dual_kawase";
 blur-strength = 6;
-blur-background-exclude = [ "window_type = 'desktop'"@DOCK_BLUR_EXCLUDE@ ];
-opacity-rule = [
-  "100:class_g = 'Google-chrome'",
-  "92:window_type = 'tooltip'",
-  "@SWITCHER_OPACITY@:class_g = 'OPENBOX_FOCUS_CYCLE_POPUP'"
-];
-corner-radius-rules = [
-  "15:window_type = 'dock' && height = @DOCK_H@",
-  "16:window_type = 'utility'",
-  "@MENU_R@:window_type = 'popup_menu'",
-  "@MENU_R@:window_type = 'dropdown_menu'",
-  "@MENU_R@:window_type = 'menu'",
-  "1:window_type = 'tooltip'",
-  "@SWITCHER_R@:class_g = 'OPENBOX_FOCUS_CYCLE_POPUP'"
-];
+blur-background-fixed = true;
+
+# Picom 12 window rules: keep foreground opacity separate from surface alpha.
+rules = (
+  { corner-radius = @WIN_R@; shadow = true; blur-background = true; },
+  { match = "window_type = 'desktop'"; corner-radius = 0; shadow = false; blur-background = false; },
+  { match = "window_type = 'dock' || window_type = 'popup_menu' || window_type = 'dropdown_menu' || window_type = 'menu' || window_type = 'tooltip' || window_type = 'combo' || class_g = 'lxqt-panel' || class_g = 'Plank' || _GTK_FRAME_EXTENTS"; shadow = false; },
+  { match = "window_type = 'utility'"; corner-radius = 16; },
+  { match = "window_type = 'popup_menu' || window_type = 'dropdown_menu' || window_type = 'menu'"; corner-radius = @MENU_R@; },
+  { match = "window_type = 'tooltip'"; corner-radius = 1; opacity = 0.92; },
+  { match = "class_g = 'Polybar' || class_g = 'Plank' || (class_g = 'lxqt-panel' && height = @BAR_H@)"; corner-radius = 0; },
+  { match = "class_g = 'Google-chrome'"; opacity = 1.0; },
+  { match = "class_g = 'OPENBOX_FOCUS_CYCLE_POPUP'"; corner-radius = @SWITCHER_R@; opacity = @SWITCHER_ALPHA@; },
+  { match = "class_i = 'GoldenGateSwitcher'"; corner-radius = @SWITCHER_R@; opacity = 1.0; shadow = false; },
+  { match = "class_g = 'lxqt-panel' && height = @DOCK_H@"; corner-radius = 15; opacity = 1.0; blur-background = @DOCK_BLUR_BOOL@; },
+  { match = "class_g = 'Plank'"; blur-background = @DOCK_BLUR_BOOL@; },
+  { match = "fullscreen"; corner-radius = 0; }
+);

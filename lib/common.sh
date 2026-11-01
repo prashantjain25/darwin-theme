@@ -77,10 +77,13 @@ render() {
   backup "$dst"
   run mkdir -p "$(dirname "$dst")"
   if [ "$DRY_RUN" = 1 ]; then info "[dry-run] render $src -> $dst"; return 0; fi
-  sed -e "s|@HOME@|$HOME|g" -e "s|@BAR_H@|$BAR_H|g" -e "s|@DOCK_H@|$DOCK_H|g" \
-      -e "s|@DOCK_ICON@|$DOCK_ICON|g" -e "s|@DOCK_W@|$DOCK_W|g" \
+  local switcher_alpha dock_blur_bool=true
+  switcher_alpha="$(python3 -c "print(${SWITCHER_OPACITY:-67} / 100)")"
+  [ "${DOCK_BLUR:-1}" = 1 ] || dock_blur_bool=false
+  sed -e "s|@SWITCHER_ALPHA@|$switcher_alpha|g" -e "s|@DOCK_BLUR_BOOL@|$dock_blur_bool|g" -e "s|@HOME@|$HOME|g" -e "s|@BAR_H@|$BAR_H|g" -e "s|@DOCK_H@|$DOCK_H|g" \
+      -e "s|@DOCK_OPACITY@|${DOCK_OPACITY:-39}|g" -e "s|@DOCK_ICON@|$DOCK_ICON|g" -e "s|@DOCK_W@|$DOCK_W|g" \
       -e "s|@WIN_R@|$WIN_R|g" -e "s|@MENU_R@|$MENU_R|g" \
-      -e "s|@SWITCHER_OPACITY@|${SWITCHER_OPACITY:-88}|g" -e "s|@SWITCHER_R@|${SWITCHER_R:-20}|g" \
+      -e "s|@SWITCHER_OPACITY@|${SWITCHER_OPACITY:-67}|g" -e "s|@SWITCHER_R@|${SWITCHER_R:-20}|g" \
       -e "s|@DOCK_BLUR_EXCLUDE@|${DOCK_BLUR_EXCLUDE:-}|g" "$src" > "$dst"
 }
 
@@ -246,6 +249,11 @@ compose_panel_qss() {
 load_theme_config() {
   python3 "$REPO_DIR/lib/theme.py" validate || die "Fix the errors in config/theme.json (or delete it to use the defaults)."
   eval "$(python3 "$REPO_DIR/lib/theme.py" env)"
+  # Discover schemas installed with a user-local dock package.
+  local user_schemas="${XDG_DATA_HOME:-$HOME/.local/share}/glib-2.0/schemas"
+  if [ "${DOCK_BACKEND:-}" = plank ] && [ -f "$user_schemas/net.launchpad.plank.gschema.xml" ]; then
+    export GSETTINGS_SCHEMA_DIR="$user_schemas"
+  fi
 }
 
 # tx <src> <dst>: install a text asset through the palette/accent/radius transform (with backup)
@@ -255,4 +263,19 @@ tx() {
   run mkdir -p "$(dirname "$dst")"
   if [ "$DRY_RUN" = 1 ]; then info "[dry-run] transform $src -> $dst"; return 0; fi
   python3 "$REPO_DIR/lib/theme.py" transform "$src" "$dst"
+}
+
+# Restart only the Golden Gate switcher; unrelated window switchers are untouched.
+restart_switcher() {
+  [ "${GG_NO_RESTART:-0}" = 1 ] && return 0
+  [ "$DRY_RUN" = 1 ] && { info "[dry-run] restart Golden Gate switcher"; return 0; }
+  local pid; pid="$(cat "$HOME/.cache/golden-gate-switcher.pid" 2>/dev/null || state_get SWITCHER_PID)"
+  if [[ "$pid" =~ ^[0-9]+$ ]] && { [ "$(ps -p "$pid" -o comm= 2>/dev/null)" = alttab ] ||
+       [[ "$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)" == *"$HOME/.local/lib/golden-gate/window_switcher.py"* ]]; }; then
+    kill "$pid" 2>/dev/null || true
+  fi
+  if [ -x "$HOME/.local/bin/golden-gate-switcher" ]; then
+    setsid nohup "$HOME/.local/bin/golden-gate-switcher" >/dev/null 2>&1 &
+    state_set SWITCHER_PID "$!"
+  fi
 }
