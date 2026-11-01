@@ -201,7 +201,7 @@ def configure():
     cur["menubar"]["enabled"] = ask("Install menu bar (yes/no)", "yes" if cur["menubar"]["enabled"] else "no", yesno)
     cur["dock"]["enabled"] = ask("Install dock (yes/no)", "yes" if cur["dock"]["enabled"] else "no", yesno)
     if cur["dock"]["enabled"]:
-        apps = ask("Dock apps, comma separated (files,browser,settings,trash,downloads,ide)",
+        apps = ask("Dock apps in order, comma separated, "|" = separator (files,browser,ide,downloads,|,settings,trash)",
                    ",".join(cur["dock"]["apps"]))
         cur["dock"]["apps"] = [a.strip() for a in apps.split(",") if a.strip()]
     errs = validate(cur)

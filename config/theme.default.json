@@ -44,8 +44,8 @@
     "icon_size": 36,
     "width": "auto",
     "_width": "pixels, or 'auto' = apps x (icon + 9) + 20 as in the Figma dock.",
-    "apps": ["files", "browser", "settings", "trash", "downloads", "ide"],
-    "_apps": "Known ids: files, browser, settings, trash, downloads, ide (older ids finder, chrome, fdm, idea still work). Add your own with entries like {\"name\":\"Terminal\",\"exec\":\"qterminal\",\"icon\":\"utilities-terminal\"}.",
+    "apps": ["files", "browser", "ide", "downloads", "|", "settings", "trash"],
+    "_apps": "Known ids: files, browser, settings, trash, downloads, ide; \"|\" draws the separator (Figma dock) (older ids finder, chrome, fdm, idea still work). Add your own with entries like {\"name\":\"Terminal\",\"exec\":\"qterminal\",\"icon\":\"utilities-terminal\"}.",
     "custom": []
   }
 }

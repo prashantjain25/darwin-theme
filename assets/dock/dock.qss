@@ -1,7 +1,7 @@
 /* Figma dock: 36px icons, 9px gap, no hover pill (golden-gate-lxqt-theme) */
 #QuickLaunch QToolButton {
     padding: 0px;
-    margin: 0px 4px;
+    margin: 0px 3px;
     border: none;
     border-radius: 8px;
     background: transparent;
