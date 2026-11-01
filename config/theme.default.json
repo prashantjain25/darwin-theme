@@ -33,6 +33,11 @@
     "_doc": "Figma text is 13 px = Inter 10 pt. mono 'Maple Mono NF' is downloaded by install.sh; any installed monospace family works."
   },
 
+  "file_manager": {
+    "list_view": "detailed",
+    "_list_view": "PCManFM-Qt folder view: detailed (list), icon, compact or thumbnail. PCManFM-Qt has no inline tree for file items, so the list is flat."
+  },
+
   "switcher": {
     "translucent": true,
     "opacity": 88,
