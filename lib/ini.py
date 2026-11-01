@@ -34,7 +34,10 @@ def set_keys(path, section, pairs):
         idx = next((i for i in range(start + 1, end) if pat.match(lines[i])), None)
         new = "%s=%s" % (key, value)
         if idx is None:
-            lines.insert(end, new)
+            ins = end
+            while ins > start + 1 and lines[ins - 1].strip() == "":   # keep the blank line that separates sections
+                ins -= 1
+            lines.insert(ins, new)
             end += 1
         else:
             lines[idx] = new

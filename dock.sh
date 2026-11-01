@@ -5,7 +5,7 @@ set -euo pipefail
 # shellcheck source=lib/common.sh
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
-WANT_BAR=1; WANT_DOCK=1; CONFIGURE=0; NO_RESTART=0
+WANT_BAR=1; WANT_DOCK=1; CONFIGURE=0; NO_RESTART=0; DOCK_MODE_FLAG=""
 usage() {
   cat <<EOF
 Usage: ./dock.sh [options]
@@ -15,6 +15,11 @@ config/theme.json. Backups are stored for ./restore.sh.
 
 Options:
   --configure       interactive wizard first (dock apps, sizes, mode ...)
+  --dock-mode MODE  switch how the dock behaves, saves it in config/theme.json and returns at once:
+                      reserve           reserves its space, windows never cover it (default)
+                      always-on-top     floats above windows, reserves nothing
+                      intelligent-hide  hides only while a window overlaps it
+                      auto-hide         always hidden, hit the screen edge to show it
   --menubar-only    only the top menu bar
   --dock-only       only the dock
   (dock order and the separator "|" are set in config/theme.json: dock.apps)
@@ -29,6 +34,7 @@ while [ $# -gt 0 ]; do
   if parse_common_flag "$1"; then shift; continue; fi
   case "$1" in
     --configure) CONFIGURE=1;;
+    --dock-mode) [ $# -ge 2 ] || die "--dock-mode needs a value"; DOCK_MODE_FLAG="$2"; shift;;
     --menubar-only) WANT_DOCK=0;;
     --dock-only) WANT_BAR=0;;
     --no-restart) NO_RESTART=1;;
@@ -39,6 +45,29 @@ done
 
 [ "$CONFIGURE" = 1 ] && python3 "$REPO_DIR/lib/theme.py" configure
 load_theme_config
+
+if [ -n "$DOCK_MODE_FLAG" ]; then
+  step "Switching the dock behaviour"
+  [ "$DRY_RUN" = 1 ] && info "[dry-run] theme.py set dock.mode $DOCK_MODE_FLAG" || python3 "$REPO_DIR/lib/theme.py" set dock.mode "$DOCK_MODE_FLAG" || die "invalid dock mode '$DOCK_MODE_FLAG'"
+  load_theme_config
+  info "dock mode: $DOCK_MODE (backend: $DOCK_BACKEND)"
+  if [ "$DOCK_BACKEND" = plank ]; then
+    case "$DOCK_MODE" in intelligent-hide) HM=intelligent;; auto-hide) HM=auto;; *) HM=none;; esac
+    PR=false; [ "$DOCK_MODE" = auto-hide ] && PR=true
+    if have gsettings && [ "${GG_SKIP_GSETTINGS:-0}" != 1 ] && [ "$DRY_RUN" = 0 ]; then
+      gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ hide-mode "'$HM'"
+      gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ pressure-reveal "$PR"
+    else info "[skipped] gsettings hide-mode=$HM pressure-reveal=$PR"; fi
+  else
+    PANEL_CONF="$HOME/.config/lxqt/panel.conf"; backup "$PANEL_CONF"
+    [ "$DRY_RUN" = 1 ] || [ "$NO_RESTART" = 1 ] || { pkill -x lxqt-panel 2>/dev/null || true; sleep 2; }
+    run python3 "$REPO_DIR/lib/panel.py" "$PANEL_CONF" --mode-only --dock-mode "$DOCK_MODE"
+    [ "$NO_RESTART" = 1 ] || restart_panel
+  fi
+  step "Done"; info "undo with ./restore.sh, switch again with ./dock.sh --dock-mode <mode>"
+  exit 0
+fi
+
 [ "$BAR_ENABLED" = 1 ] || WANT_BAR=0
 [ "$DOCK_ENABLED" = 1 ] || WANT_DOCK=0
 [ "$WANT_BAR$WANT_DOCK" = 00 ] && die "menu bar and dock are both disabled in config/theme.json"
@@ -49,6 +78,7 @@ mkdir -p "$STATE_DIR" 2>/dev/null || true
 step "Checking dependencies"
 for c in python3 lxqt-panel picom pcmanfm-qt; do need_cmd "$c"; done
 ensure_whitesur_icons || true
+if [ "$DOCK_BACKEND" = plank ] && [ "$DOCK_ENABLED" = 1 ] && [ "$WANT_DOCK" = 1 ]; then need_cmd plank; PKG[plank]=plank; fi
 finish_deps
 ICON_DIR="$(whitesur_icon_dir || true)"
 [ -n "$ICON_DIR" ] || warn "WhiteSur icon theme not found: dock launchers will use whatever icons the system offers"
@@ -112,6 +142,11 @@ build_launcher() { # build_launcher <id>   (ids: files browser settings trash do
 }
 
 if [ "$WANT_DOCK" = 1 ]; then
+  if [ "$DOCK_BACKEND" = lxqt-panel ]; then
+    info "dock backend: lxqt-panel. Applied: fill $DOCK_FILL at $DOCK_OPACITY%, padding/width, separator."
+    info "Not possible with the panel (its window is drawn opaque): border, outer ring, radius $DOCK_RADIUS, ${DOCK_OFFSET}px edge offset, blur."
+    info "Set dock.backend to \"plank\" in config/theme.json to enable them (sudo apt install plank)."
+  fi
   step "Dock launchers"
   for id in $DOCK_APPS; do
     if [ "$id" = "|" ] || [ "$id" = separator ]; then SEP_AFTER=${#DESKTOPS[@]}; continue; fi
@@ -139,11 +174,39 @@ step "Panel layout"
 PANEL_CONF="$HOME/.config/lxqt/panel.conf"
 backup "$PANEL_CONF"
 [ "$DRY_RUN" = 1 ] || [ "$NO_RESTART" = 1 ] || { pkill -x lxqt-panel 2>/dev/null || true; sleep 2; }   # the panel rewrites its config on exit
-ARGS=("$PANEL_CONF" --mode "$MODE" --bar-h "$BAR_H" --dock-h "$DOCK_H" --dock-icon "$DOCK_ICON" --dock-w "${DOCK_W:-290}" --clock-format "$CLOCK_FORMAT")
+ARGS=("$PANEL_CONF" --mode "$MODE" --dock-mode "$DOCK_MODE" --hide-tray "$HIDE_TRAY" --drives "$SHOW_DRIVES" --clock-semibold "$CLOCK_SEMIBOLD" \
+      --dock-fill "$DOCK_FILL" --dock-opacity "$DOCK_OPACITY" --bar-h "$BAR_H" --dock-h "$DOCK_H" --dock-icon "$DOCK_ICON" --dock-w "${DOCK_W:-290}" --clock-format "$CLOCK_FORMAT")
 [ "$WANT_BAR" = 1 ] && ARGS+=(--menubar)
 [ -n "$ICON_DIR" ] && [ -f "$ICON_DIR/places/16/start-here.svg" ] && ARGS+=(--start-icon "$ICON_DIR/places/16/start-here.svg")
-if [ "$WANT_DOCK" = 1 ]; then ARGS+=(--dock --sep-after "$SEP_AFTER"); for d in "${DESKTOPS[@]}"; do ARGS+=(--app "$d"); done; fi
+if [ "$WANT_DOCK" = 1 ]; then
+  ARGS+=(--dock --sep-after "$SEP_AFTER"); for d in "${DESKTOPS[@]}"; do ARGS+=(--app "$d"); done
+  [ "$DOCK_BACKEND" = plank ] && ARGS+=(--no-dock-panel)
+fi
 run python3 "$REPO_DIR/lib/panel.py" "${ARGS[@]}"
+
+# Plank backend: theme, pinned launchers, dock settings, autostart
+if [ "$WANT_DOCK" = 1 ] && [ "$DOCK_BACKEND" = plank ]; then
+  step "Plank dock"
+  backup "$HOME/.local/share/plank/themes/GoldenGate"; backup "$HOME/.config/plank/dock1/launchers"
+  PA=(--home "$HOME" --mode "$MODE" --dock-mode "$DOCK_MODE" --icon-size "$DOCK_ICON" --fill "$DOCK_FILL" --opacity "$DOCK_OPACITY" \
+      --border "$DOCK_BORDER" --ring "$DOCK_RING" --radius "$DOCK_RADIUS" --padding "$DOCK_PADDING")
+  for d in "${DESKTOPS[@]}"; do PA+=(--app "$d"); done
+  if [ "$DRY_RUN" = 1 ]; then info "[dry-run] python3 lib/plank.py ${PA[*]}"; else
+    SETTINGS="$(python3 "$REPO_DIR/lib/plank.py" "${PA[@]}")"
+    if have gsettings && [ "${GG_SKIP_GSETTINGS:-0}" != 1 ]; then
+      while IFS=$'\t' read -r k v; do
+        gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ "$k" "$v" 2>/dev/null || warn "plank setting $k not applied (is plank installed?)"
+      done <<<"$SETTINGS"
+    else info "(gsettings skipped)"; fi
+  fi
+  backup "$HOME/.config/autostart/plank.desktop"
+  if [ "$DRY_RUN" = 0 ]; then
+    mkdir -p "$HOME/.config/autostart"
+    printf '[Desktop Entry]\nType=Application\nName=Plank\nExec=plank\nX-GNOME-Autostart-enabled=true\n' > "$HOME/.config/autostart/plank.desktop"
+  fi
+  [ "$DOCK_OFFSET" -gt 0 ] && info "note: Plank cannot float the dock ${DOCK_OFFSET}px above the screen edge; the separator is not drawn either."
+  [ "$DOCK_BLUR" = 1 ] || DOCK_BLUR_EXCLUDE=", \"class_g = 'Plank'\""
+fi
 
 # separator line drawn by the panel's "lined" spacer: Figma's 11 x 41 dock separator
 if [ "$WANT_DOCK" = 1 ] && [ "$SEP_AFTER" -gt 0 ] && [ -d "$HOME/.local/share/lxqt/themes/sombre-et-rond/spacer-plugin" ]; then
@@ -160,10 +223,13 @@ render "$REPO_DIR/assets/picom/picom.conf.in" "$HOME/.config/picom.conf"
 if [ "$NO_RESTART" = 0 ]; then
   step "Restarting picom and the panel"
   restart_picom; restart_panel
+  if [ "$WANT_DOCK" = 1 ] && [ "$DOCK_BACKEND" = plank ] && [ "$DRY_RUN" = 0 ] && have plank; then
+    pkill -x plank 2>/dev/null || true; sleep 1; ( setsid nohup plank >/dev/null 2>&1 & )
+  fi
 fi
 
 step "Done"
 info "Backups: $BACKUP_DIR   (undo with ./restore.sh)"
 [ "$WANT_BAR" = 1 ]  && info "Menu bar: ${BAR_H}px, start icon, tray, one-line clock."
-[ "$WANT_DOCK" = 1 ] && info "Dock: ${#DESKTOPS[@]} launchers, ${DOCK_ICON}px icons."
+[ "$WANT_DOCK" = 1 ] && info "Dock: ${#DESKTOPS[@]} launchers, ${DOCK_ICON}px icons, behaviour: $DOCK_MODE."
 info "Limitation: LXQt has no global-menu host, so app menus (File/Edit) stay inside windows."
