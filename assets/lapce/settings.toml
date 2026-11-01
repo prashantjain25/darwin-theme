@@ -1,0 +1,15 @@
+[ui]
+scale = 1.0
+font-family = "Inter"
+font-size = 15
+icon-size = 16
+header-height = 32
+status-height = 24
+
+[editor]
+font-family = "Maple Mono NF"
+font-size = 15
+
+[terminal]
+font-family = "Maple Mono NF"
+font-size = 18

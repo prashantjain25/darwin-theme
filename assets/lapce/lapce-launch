@@ -1,0 +1,4 @@
+#!/bin/sh
+# force 1:1 display scale (winit would otherwise derive ~1.6x from the 158 DPI panel)
+export WINIT_X11_SCALE_FACTOR=1
+exec "$HOME/opt/lapce/lapce" "$@"
