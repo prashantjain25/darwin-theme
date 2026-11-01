@@ -1,0 +1,18 @@
+/* Figma menu-bar item metrics: items 24px high, 11px side padding, radius 4 (golden-gate-lxqt-theme) */
+LXQtPanelPlugin > QToolButton,
+#Tray QToolButton,
+#StatusNotifier QToolButton,
+StatusNotifierButton,
+TrayIcon {
+    min-height: 24px;
+    max-height: 24px;
+    padding: 4px 11px;
+    margin: 0px;
+    border: none;
+    border-radius: 4px;
+}
+LXQtPanelPlugin > QToolButton:hover, StatusNotifierButton:hover { background: rgba(255, 255, 255, 10%); }
+LXQtPanelPlugin > QToolButton:pressed, StatusNotifierButton:pressed { background: rgba(255, 255, 255, 16%); }
+
+/* Figma menu bar: 10px margin at both ends (golden-gate-lxqt-theme) */
+LXQtPanel #BackgroundWidget { padding-left: 10px; padding-right: 10px; }
