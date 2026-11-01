@@ -17,6 +17,7 @@ Options:
   --configure       interactive wizard first (dock apps, sizes, mode ...)
   --menubar-only    only the top menu bar
   --dock-only       only the dock
+  (dock order and the separator "|" are set in config/theme.json: dock.apps)
   --install-deps    apt-install missing packages and fetch the WhiteSur icon theme
   --no-restart      do not restart the panel / picom
   --dry-run         print what would happen, change nothing
@@ -55,6 +56,7 @@ ICON_DIR="$(whitesur_icon_dir || true)"
 # ---------------------------------------------------------------- launchers
 APPS_DIR="$HOME/.local/share/applications"
 DESKTOPS=()
+SEP_AFTER=0
 
 icon_path() { # icon_path <relative-file> <fallback-name>
   if [ -n "$ICON_DIR" ] && [ -f "$ICON_DIR/$1" ]; then echo "$ICON_DIR/$1"; else echo "$2"; fi
@@ -111,7 +113,11 @@ build_launcher() { # build_launcher <id>   (ids: files browser settings trash do
 
 if [ "$WANT_DOCK" = 1 ]; then
   step "Dock launchers"
-  for id in $DOCK_APPS; do build_launcher "$id"; done
+  for id in $DOCK_APPS; do
+    if [ "$id" = "|" ] || [ "$id" = separator ]; then SEP_AFTER=${#DESKTOPS[@]}; continue; fi
+    build_launcher "$id"
+  done
+  [ "$SEP_AFTER" -ge "${#DESKTOPS[@]}" ] && SEP_AFTER=0   # a separator at the very end draws nothing
   # custom entries from config/theme.json: dock.custom = [{"name","exec","icon"}, ...]
   while IFS=$'\t' read -r cname cexec cicon; do
     [ -n "$cname" ] && write_launcher "custom-$(echo "$cname" | tr -c 'A-Za-z0-9' '-')" "$cname" "$cexec" "$cicon"
@@ -123,7 +129,8 @@ for c in theme.load()["dock"].get("custom", []):
 PY
   )
   [ "${#DESKTOPS[@]}" -gt 0 ] || die "no dock launchers could be created"
-  if [ "$DOCK_W" = auto ]; then DOCK_W=$(( ${#DESKTOPS[@]} * (DOCK_ICON + 9) + 20 )); fi
+  # Figma dock: 9 px between items, 8 px edge padding; measured with the panel's own button margins
+  if [ "$DOCK_W" = auto ]; then DOCK_W=$(( ${#DESKTOPS[@]} * (DOCK_ICON + 9) + 19 + (SEP_AFTER > 0 ? 8 : 0) )); fi
   info "dock width: ${DOCK_W}px for ${#DESKTOPS[@]} launchers"
 fi
 
@@ -132,11 +139,16 @@ step "Panel layout"
 PANEL_CONF="$HOME/.config/lxqt/panel.conf"
 backup "$PANEL_CONF"
 [ "$DRY_RUN" = 1 ] || [ "$NO_RESTART" = 1 ] || { pkill -x lxqt-panel 2>/dev/null || true; sleep 2; }   # the panel rewrites its config on exit
-ARGS=("$PANEL_CONF" --bar-h "$BAR_H" --dock-h "$DOCK_H" --dock-icon "$DOCK_ICON" --dock-w "${DOCK_W:-290}" --clock-format "$CLOCK_FORMAT")
+ARGS=("$PANEL_CONF" --mode "$MODE" --bar-h "$BAR_H" --dock-h "$DOCK_H" --dock-icon "$DOCK_ICON" --dock-w "${DOCK_W:-290}" --clock-format "$CLOCK_FORMAT")
 [ "$WANT_BAR" = 1 ] && ARGS+=(--menubar)
 [ -n "$ICON_DIR" ] && [ -f "$ICON_DIR/places/16/start-here.svg" ] && ARGS+=(--start-icon "$ICON_DIR/places/16/start-here.svg")
-if [ "$WANT_DOCK" = 1 ]; then ARGS+=(--dock); for d in "${DESKTOPS[@]}"; do ARGS+=(--app "$d"); done; fi
+if [ "$WANT_DOCK" = 1 ]; then ARGS+=(--dock --sep-after "$SEP_AFTER"); for d in "${DESKTOPS[@]}"; do ARGS+=(--app "$d"); done; fi
 run python3 "$REPO_DIR/lib/panel.py" "${ARGS[@]}"
+
+# separator line drawn by the panel's "lined" spacer: Figma's 11 x 41 dock separator
+if [ "$WANT_DOCK" = 1 ] && [ "$SEP_AFTER" -gt 0 ] && [ -d "$HOME/.local/share/lxqt/themes/sombre-et-rond/spacer-plugin" ]; then
+  install_file "$REPO_DIR/assets/dock/dock-separator.svg" "$HOME/.local/share/lxqt/themes/sombre-et-rond/spacer-plugin/spacer-line.svg"
+fi
 
 # ---------------------------------------------------------------- stylesheet + compositor
 step "Stylesheet and compositor rules"

@@ -37,6 +37,8 @@ def main():
     ap.add_argument("--start-icon", default="")
     ap.add_argument("--clock-format", default="ddd MMM d  h:mm AP")
     ap.add_argument("--app", action="append", default=[])
+    ap.add_argument("--mode", default="dark", choices=["dark", "light"])
+    ap.add_argument("--sep-after", type=int, default=0, help="draw a separator after this many apps")
     a = ap.parse_args()
 
     conf = a.conf
@@ -78,19 +80,36 @@ def main():
 
     if a.dock:
         set_keys(conf, "panel2", [
-            ("background-color", "#4a4a4a"), ("opacity", "39"),
+            ("background-color", "#f6f6f6" if a.mode == "light" else "#4a4a4a"),   # Figma dock fill
+            ("opacity", "36" if a.mode == "light" else "39"),
             ("alignment", "0"), ("animation-duration", "0"), ("hidable", "false"),
             ("iconSize", str(a.dock_icon)), ("lineCount", "1"), ("lockPanel", "true"),
             ("panelSize", str(a.dock_h)), ("plugins", "quicklaunch"),
             ("position", "Bottom"), ("reserve-space", "true"), ("visible-margin", "true"),
             ("width", str(a.dock_w)), ("width-percent", "false"),
         ])
-        text = drop_section(read(conf), "quicklaunch")
-        block = "[quicklaunch]\nalignment=Left\n"
-        for i, desk in enumerate(a.app, 1):
-            block += "apps\\%d\\desktop=%s\n" % (i, desk)
-        block += "apps\\size=%d\n" % len(a.app)
-        open(conf, "w", encoding="utf-8").write(text.rstrip("\n") + "\n\n" + block)
+        text = read(conf)
+        for name in ("quicklaunch", "quicklaunch2", "spacer2"):
+            text = drop_section(text, name)
+
+        def group(name, apps, typ):
+            block = "[%s]\ntype=%s\nalignment=Left\n" % (name, typ)
+            for i, desk in enumerate(apps, 1):
+                block += "apps\\%d\\desktop=%s\n" % (i, desk)
+            return block + "apps\\size=%d\n" % len(apps)
+
+        if 0 < a.sep_after < len(a.app):
+            # LXQt plugin instances with a numeric suffix need an explicit type=
+            plugins = "quicklaunch, spacer2, quicklaunch2"
+            blocks = [group("quicklaunch", a.app[:a.sep_after], "quicklaunch"),
+                      "[spacer2]\ntype=spacer\nalignment=Left\nexpandable=false\nspaceType=lined\n",
+                      group("quicklaunch2", a.app[a.sep_after:], "quicklaunch")]
+        else:
+            plugins = "quicklaunch"
+            blocks = [group("quicklaunch", a.app, "quicklaunch")]
+        text = text.rstrip("\n") + "\n\n" + "\n".join(blocks)
+        open(conf, "w", encoding="utf-8").write(text)
+        set_keys(conf, "panel2", [("plugins", plugins)])
 
     print("panel config written:", conf, "| panels =", ", ".join(panels))
 
