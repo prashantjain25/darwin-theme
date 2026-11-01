@@ -1,0 +1,15 @@
+{
+  "_doc": "EXPERIMENTAL light palette. Keys are the dark colours used by the assets, values the light replacements (Figma light values where known). Applied in one pass, so substitutions never chain.",
+  "hex": {
+    "#141414": "#f2f2f2", "#101010": "#e8e8e8", "#0d0d0d": "#ffffff", "#090909": "#d9d9d9",
+    "#1b1b1b": "#f7f7f7", "#161616": "#f4f4f4", "#181818": "#f5f5f5", "#1c1c1c": "#efefef",
+    "#242424": "#e6e6e6", "#2c2c2c": "#e6e6e6", "#323232": "#dcdcdc", "#373737": "#d9d9d9",
+    "#434343": "#cfcfcf", "#3a3a3a": "#c8c8c8", "#353535": "#f6f6f6", "#2e2e2e": "#f6f6f6",
+    "#444444": "#d4d4d4", "#343434": "#cfcfcf", "#5a5a5a": "#bfbfbf", "#6e6e6e": "#a0a0a0",
+    "#8a8a8a": "#727272", "#f5f5f5": "#1a1a1a", "#dadada": "#262626", "#626262": "#a8a8a8"
+  },
+  "alpha_base": [0,0,0],
+  "icon_theme": "WhiteSur-light",
+  "gtk_source": "WhiteSur-Light",
+  "accent": "#0088ff"
+}
