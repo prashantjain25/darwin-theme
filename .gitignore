@@ -1,0 +1,5 @@
+config/theme.json
+*.bak
+*.bak.*
+__pycache__/
+*.pyc
