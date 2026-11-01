@@ -39,6 +39,8 @@
   },
 
   "switcher": {
+    "style": "icons",
+    "_style": "'icons' = one icon per window with the selected name below, as in macOS; 'list' = Openbox's text list.",
     "translucent": true,
     "opacity": 88,
     "corner_radius": 20,

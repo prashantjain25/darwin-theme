@@ -197,7 +197,7 @@ mod_openbox() {
   local rc found=0
   for rc in "$HOME/.config/openbox/rc.xml" "$HOME/.config/openbox/lxqt-rc.xml"; do
     [ -f "$rc" ] || continue; found=1
-    backup "$rc"; run python3 "$REPO_DIR/lib/openbox_rc.py" "$rc" OpenboxSur-Dark-Custom "$TB_FONT" "$FONT_UI"
+    backup "$rc"; run python3 "$REPO_DIR/lib/openbox_rc.py" "$rc" OpenboxSur-Dark-Custom "$TB_FONT" "$FONT_UI" "$SWITCHER_DIALOG"
   done
   [ "$found" = 1 ] || warn "no ~/.config/openbox/rc.xml found; select 'OpenboxSur-Dark-Custom' in LXQt Appearance > Openbox"
 }

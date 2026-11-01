@@ -94,6 +94,7 @@ def resolve(cfg):
         "MENU_RIM": int(bool(cfg["menu"]["rim"])),
         "SWITCHER_OPACITY": int(cfg["switcher"]["opacity"]) if cfg["switcher"]["translucent"] else 100,
         "SWITCHER_R": cfg["switcher"]["corner_radius"],
+        "SWITCHER_DIALOG": "icons" if cfg["switcher"]["style"] == "icons" else "list",
         "FM_VIEW": cfg["file_manager"]["list_view"],
         "FONT_UI": cfg["fonts"]["ui"],
         "FONT_SIZE": cfg["fonts"]["ui_size"],
@@ -183,6 +184,8 @@ def validate(cfg):
             errs.append("window.%s must be %d..%d" % (k, lo, hi))
     if cfg["file_manager"]["list_view"] not in ("detailed", "icon", "compact", "thumbnail"):
         errs.append("file_manager.list_view must be detailed, icon, compact or thumbnail")
+    if cfg["switcher"]["style"] not in ("icons", "list"):
+        errs.append("switcher.style must be 'icons' or 'list'")
     if not (30 <= int(cfg["switcher"]["opacity"]) <= 100):
         errs.append("switcher.opacity must be 30..100")
     if not (0 <= int(cfg["switcher"]["corner_radius"]) <= 40):
