@@ -8,6 +8,7 @@ rounded-corners-exclude = [
   "window_type = 'desktop'",
   "class_g = 'lxqt-panel' && height = @BAR_H@",
   "class_g = 'Polybar'",
+  "class_g = 'Plank'",
   "_NET_WM_STATE@[0]:a = '_NET_WM_STATE_FULLSCREEN'"
 ];
 
@@ -27,14 +28,16 @@ shadow-exclude = [
   "window_type = 'dock'",
   "window_type = 'desktop'",
   "class_g = 'lxqt-panel'",
+  "class_g = 'Plank'",
   "_GTK_FRAME_EXTENTS@:c"
 ];
 blur-method = "dual_kawase";
 blur-strength = 6;
-blur-background-exclude = [ "window_type = 'desktop'" ];
+blur-background-exclude = [ "window_type = 'desktop'"@DOCK_BLUR_EXCLUDE@ ];
 opacity-rule = [
   "100:class_g = 'Google-chrome'",
-  "92:window_type = 'tooltip'"
+  "92:window_type = 'tooltip'",
+  "@SWITCHER_OPACITY@:class_g = 'OPENBOX_FOCUS_CYCLE_POPUP'"
 ];
 corner-radius-rules = [
   "15:window_type = 'dock' && height = @DOCK_H@",
@@ -42,5 +45,6 @@ corner-radius-rules = [
   "@MENU_R@:window_type = 'popup_menu'",
   "@MENU_R@:window_type = 'dropdown_menu'",
   "@MENU_R@:window_type = 'menu'",
-  "1:window_type = 'tooltip'"
+  "1:window_type = 'tooltip'",
+  "@SWITCHER_R@:class_g = 'OPENBOX_FOCUS_CYCLE_POPUP'"
 ];

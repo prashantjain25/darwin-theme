@@ -6,6 +6,7 @@
   theme.py transform SRC DST       copy a text asset applying palette/accent/radius/rim options
   theme.py openbox-border FILE     apply the window border options to an Openbox themerc
   theme.py configure               interactive wizard, writes config/theme.json
+  theme.py set a.b.c VALUE         change one option in config/theme.json (e.g. dock.mode intelligent-hide)
   theme.py validate                check the user config, exit 1 on problems
 
 The user edits config/theme.json (created from config/theme.default.json); only
@@ -21,6 +22,20 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT = os.path.join(ROOT, "config", "theme.default.json")
 USER = os.environ.get("THEME_CONFIG", os.path.join(ROOT, "config", "theme.json"))
+
+DOCK_MODES = ("reserve", "always-on-top", "intelligent-hide", "auto-hide")
+_MODE_ALIASES = {
+    "reserve-space": "reserve", "reserved": "reserve", "reserve-dock-space": "reserve",
+    "always_on_top": "always-on-top", "alwaysontop": "always-on-top", "top": "always-on-top", "on-top": "always-on-top",
+    "intelligent": "intelligent-hide", "intelli-hide": "intelligent-hide", "intelli_hide": "intelligent-hide", "smart-hide": "intelligent-hide",
+    "autohide": "auto-hide", "auto": "auto-hide", "hidden": "auto-hide", "always-hidden": "auto-hide", "hide": "auto-hide",
+}
+
+
+def norm_mode(value):
+    v = str(value).strip().lower().replace(" ", "-")
+    return _MODE_ALIASES.get(v, v)
+
 
 HEX = re.compile(r"#[0-9a-fA-F]{6}\b")
 COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")
@@ -77,16 +92,31 @@ def resolve(cfg):
         "TB_FONT": cfg["window"]["titlebar_font_size"],
         "MENU_R": cfg["menu"]["corner_radius"],
         "MENU_RIM": int(bool(cfg["menu"]["rim"])),
+        "SWITCHER_OPACITY": int(cfg["switcher"]["opacity"]) if cfg["switcher"]["translucent"] else 100,
+        "SWITCHER_R": cfg["switcher"]["corner_radius"],
         "FONT_UI": cfg["fonts"]["ui"],
         "FONT_SIZE": cfg["fonts"]["ui_size"],
         "FONT_MONO": cfg["fonts"]["mono"],
         "BAR_ENABLED": int(bool(cfg["menubar"]["enabled"])),
         "BAR_H": cfg["menubar"]["height"],
         "CLOCK_FORMAT": cfg["menubar"]["clock_format"],
+        "CLOCK_SEMIBOLD": int(bool(cfg["menubar"]["clock_semibold"])),
+        "HIDE_TRAY": ",".join(cfg["menubar"]["hidden_tray_items"]),
+        "SHOW_DRIVES": int(bool(cfg["menubar"]["show_drives"])),
         "DOCK_ENABLED": int(bool(cfg["dock"]["enabled"])),
         "DOCK_ICON": cfg["dock"]["icon_size"],
         "DOCK_W": cfg["dock"]["width"],
         "DOCK_APPS": " ".join(cfg["dock"]["apps"]),
+        "DOCK_BACKEND": cfg["dock"]["backend"],
+        "DOCK_MODE": norm_mode(cfg["dock"]["mode"]),
+        "DOCK_FILL": cfg["dock"]["style"]["fill"] if cfg["dock"]["style"]["fill"] != "auto" else ("#f6f6f6" if light else "#4a4a4a"),
+        "DOCK_OPACITY": cfg["dock"]["style"]["opacity"] if cfg["dock"]["style"]["opacity"] != "auto" else (36 if light else 39),
+        "DOCK_BORDER": int(bool(cfg["dock"]["style"]["border"])),
+        "DOCK_RING": int(bool(cfg["dock"]["style"]["ring"])),
+        "DOCK_RADIUS": cfg["dock"]["style"]["radius"],
+        "DOCK_PADDING": cfg["dock"]["style"]["padding"],
+        "DOCK_OFFSET": cfg["dock"]["style"]["offset"],
+        "DOCK_BLUR": int(bool(cfg["dock"]["style"]["blur"])),
     }
 
 
@@ -125,6 +155,8 @@ def apply_border(text, cfg):
         "border.width": str(r["BORDER_WIDTH"]),
         "window.active.border.color": r["BORDER_ACTIVE"],
         "window.inactive.border.color": r["BORDER_INACTIVE"],
+        "osd.border.width": "1" if r["BORDER_WIDTH"] else "0",
+        "osd.border.color": r["BORDER_ACTIVE"],
     }
     for k, v in kv.items():
         pat = re.compile(r"^%s:.*$" % re.escape(k), re.M)
@@ -148,10 +180,26 @@ def validate(cfg):
     for k, lo, hi in (("corner_radius", 0, 40), ("titlebar_font_size", 8, 16)):
         if not (lo <= int(cfg["window"][k]) <= hi):
             errs.append("window.%s must be %d..%d" % (k, lo, hi))
+    if not (30 <= int(cfg["switcher"]["opacity"]) <= 100):
+        errs.append("switcher.opacity must be 30..100")
+    if not (0 <= int(cfg["switcher"]["corner_radius"]) <= 40):
+        errs.append("switcher.corner_radius must be 0..40")
     if not (0 <= int(cfg["menu"]["corner_radius"]) <= 30):
         errs.append("menu.corner_radius must be 0..30")
     if not (20 <= int(cfg["menubar"]["height"]) <= 60):
         errs.append("menubar.height must be 20..60")
+    if norm_mode(cfg["dock"]["mode"]) not in DOCK_MODES:
+        errs.append("dock.mode must be one of: %s" % ", ".join(DOCK_MODES))
+    if cfg["dock"]["backend"] not in ("lxqt-panel", "plank"):
+        errs.append("dock.backend must be 'lxqt-panel' or 'plank'")
+    st = cfg["dock"]["style"]
+    if st["fill"] != "auto" and not COLOR.match(st["fill"]):
+        errs.append("dock.style.fill must be 'auto' or #rrggbb")
+    if st["opacity"] != "auto" and not (0 <= int(st["opacity"]) <= 100):
+        errs.append("dock.style.opacity must be 'auto' or 0..100")
+    for k, hi in (("radius", 30), ("padding", 30), ("offset", 40)):
+        if not (0 <= int(st[k]) <= hi):
+            errs.append("dock.style.%s must be 0..%d" % (k, hi))
     if not (16 <= int(cfg["dock"]["icon_size"]) <= 96):
         errs.append("dock.icon_size must be 16..96")
     return errs
@@ -201,6 +249,8 @@ def configure():
     cur["menubar"]["enabled"] = ask("Install menu bar (yes/no)", "yes" if cur["menubar"]["enabled"] else "no", yesno)
     cur["dock"]["enabled"] = ask("Install dock (yes/no)", "yes" if cur["dock"]["enabled"] else "no", yesno)
     if cur["dock"]["enabled"]:
+        cur["dock"]["mode"] = ask("Dock behaviour (reserve / always-on-top / intelligent-hide / auto-hide)",
+                                  norm_mode(cur["dock"]["mode"]), norm_mode, DOCK_MODES)
         apps = ask("Dock apps in order, comma separated, "|" = separator (files,browser,ide,downloads,|,settings,trash)",
                    ",".join(cur["dock"]["apps"]))
         cur["dock"]["apps"] = [a.strip() for a in apps.split(",") if a.strip()]
@@ -231,9 +281,30 @@ def main():
         open(sys.argv[3], "w", encoding="utf-8").write(transform(data, load()))
     elif cmd == "openbox-border":
         p = sys.argv[2]
-        open(p, "w", encoding="utf-8").write(apply_border(open(p, encoding="utf-8").read(), load()))
+        data = open(p, encoding="utf-8").read()          # read first: opening for write would truncate it
+        open(p, "w", encoding="utf-8").write(apply_border(data, load()))
     elif cmd == "configure":
         configure()
+    elif cmd == "set":
+        key, val = sys.argv[2], sys.argv[3]
+        try:
+            val = json.loads(val)            # numbers / booleans / lists
+        except ValueError:
+            pass
+        if key == "dock.mode":
+            val = norm_mode(val)
+        user = json.load(open(USER, encoding="utf-8")) if os.path.exists(USER) else {}
+        node = user
+        parts = key.split(".")
+        for p in parts[:-1]:
+            node = node.setdefault(p, {})
+        node[parts[-1]] = val
+        errs = validate(deep_merge(json.load(open(DEFAULT, encoding="utf-8")), user))
+        if errs:
+            sys.exit("not saved: " + "; ".join(errs))
+        os.makedirs(os.path.dirname(USER), exist_ok=True)
+        json.dump(user, open(USER, "w", encoding="utf-8"), indent=2)
+        print("%s = %s  (saved to %s)" % (key, val, USER))
     elif cmd == "validate":
         errs = validate(load())
         for e in errs:

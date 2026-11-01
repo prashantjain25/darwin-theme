@@ -125,18 +125,18 @@ menu.title.text.justify: center
 ### OSD
 osd.border.width: 1
 
-osd.border.color: #000000
+osd.border.color: #4a4a4a
 
 osd.label.text.color: #f5f5f5
 
-osd.bg: flat solid#
-osd.bg.color: #141414
+osd.bg: flat solid
+osd.bg.color: #353535
 osd.label.bg: flat solid
-osd.label.bg.color: #141414
+osd.label.bg.color: #353535
 osd.hilight.bg: flat solid
-osd.hilight.bg.color: #0091ff
+osd.hilight.bg.color: #5a5a5a
 osd.unhilight.bg: flat solid
-osd.unhilight.bg.color: #2c2c2c
+osd.unhilight.bg.color: #353535
 
 #osd.label.text.font: text
 window.inactive.handle.bg.color: #0d0d0d

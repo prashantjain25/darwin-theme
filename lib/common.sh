@@ -79,7 +79,9 @@ render() {
   if [ "$DRY_RUN" = 1 ]; then info "[dry-run] render $src -> $dst"; return 0; fi
   sed -e "s|@HOME@|$HOME|g" -e "s|@BAR_H@|$BAR_H|g" -e "s|@DOCK_H@|$DOCK_H|g" \
       -e "s|@DOCK_ICON@|$DOCK_ICON|g" -e "s|@DOCK_W@|$DOCK_W|g" \
-      -e "s|@WIN_R@|$WIN_R|g" -e "s|@MENU_R@|$MENU_R|g" "$src" > "$dst"
+      -e "s|@WIN_R@|$WIN_R|g" -e "s|@MENU_R@|$MENU_R|g" \
+      -e "s|@SWITCHER_OPACITY@|${SWITCHER_OPACITY:-88}|g" -e "s|@SWITCHER_R@|${SWITCHER_R:-20}|g" \
+      -e "s|@DOCK_BLUR_EXCLUDE@|${DOCK_BLUR_EXCLUDE:-}|g" "$src" > "$dst"
 }
 
 # ---------------------------------------------------------------- state

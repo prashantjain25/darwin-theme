@@ -33,10 +33,21 @@
     "_doc": "Figma text is 13 px = Inter 10 pt. mono 'Maple Mono NF' is downloaded by install.sh; any installed monospace family works."
   },
 
+  "switcher": {
+    "translucent": true,
+    "opacity": 88,
+    "corner_radius": 20,
+    "_doc": "Alt+Tab window switcher: glass look through the compositor (opacity in %, with background blur). translucent=false keeps it opaque."
+  },
+
   "menubar": {
     "enabled": true,
     "height": 34,
-    "clock_format": "ddd MMM d  h:mm AP"
+    "clock_format": "ddd MMM d  h:mm AP",
+    "clock_semibold": true,
+    "hidden_tray_items": ["Free Download Manager", "lxqt-notificationd", "qlipper"],
+    "_hidden_tray_items": "Titles of tray items collapsed behind the chevron at the left of the tray group (click it to reveal them for a few seconds). Find titles with: busctl --user get-property <service> /StatusNotifierItem org.kde.StatusNotifierItem Title",
+    "show_drives": true
   },
 
   "dock": {
@@ -46,6 +57,21 @@
     "_width": "pixels, or 'auto' = apps x (icon + 9) + 20 as in the Figma dock.",
     "apps": ["files", "browser", "ide", "downloads", "|", "settings", "trash"],
     "_apps": "Known ids: files, browser, settings, trash, downloads, ide; \"|\" draws the separator (Figma dock) (older ids finder, chrome, fdm, idea still work). Add your own with entries like {\"name\":\"Terminal\",\"exec\":\"qterminal\",\"icon\":\"utilities-terminal\"}.",
-    "custom": []
+    "custom": [],
+    "mode": "reserve",
+    "_mode": "How the dock behaves: 'reserve' = reserves its space, windows never cover it; 'always-on-top' = floats above windows without reserving space; 'intelligent-hide' = hides only while a window overlaps it; 'auto-hide' = always hidden, move the pointer to the screen edge to show it. Switch quickly with: ./dock.sh --dock-mode <mode>",
+    "backend": "lxqt-panel",
+    "_backend": "'lxqt-panel' (default) or 'plank' (experimental, needs: sudo apt install plank). The LXQt panel paints its window opaque, so border, outer ring, rounded corners, edge offset and blur need Plank.",
+    "style": {
+      "fill": "auto",
+      "opacity": "auto",
+      "border": true,
+      "ring": true,
+      "radius": 15,
+      "padding": 8,
+      "offset": 5,
+      "blur": true,
+      "_doc": "fill 'auto' = Figma dock fill for the mode (dark #4a4a4a 39%, light #f6f6f6 36%) or #rrggbb; opacity 'auto' or 0-100. border = 1 px inner stroke, ring = 1 px outer ring, radius/padding/offset in px, blur = compositor blur behind the dock. Honoured by the lxqt-panel backend: fill, opacity, padding (width). The rest only by plank (offset is not supported by Plank either and is ignored there)."
+    }
   }
 }
