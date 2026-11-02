@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MIT
+[Desktop Entry]
+Name=Darwin Dark
+Comment=Original compact dark Aurorae window decoration
+Type=Service
+X-KDE-ServiceTypes=aurorae
+X-KDE-PluginInfo-Name=Darwin-Dark
+X-KDE-PluginInfo-License=MIT
+X-KDE-PluginInfo-Version=1.0.0

@@ -1,0 +1,16 @@
+{
+  "KPackageStructure": "Plasma/LookAndFeel",
+  "KPlugin": {
+    "Id": "com.prashantjain25.darwin.dark",
+    "Name": "Darwin Dark",
+    "Description": "Original Darwin dark desktop defaults for Plasma 6.",
+    "Version": "1.0.0",
+    "License": "MIT",
+    "Authors": [
+      {
+        "Name": "Darwin KDE theme contributors"
+      }
+    ]
+  },
+  "X-Plasma-API": "5.0"
+}

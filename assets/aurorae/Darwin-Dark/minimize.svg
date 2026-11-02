@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="20" viewBox="0 0 160 20">
+  <!-- SPDX-License-Identifier: MIT; Original Darwin geometric artwork. -->
+  <g id="active-center" transform="translate(0,0)">
+    <circle cx="7" cy="7" r="7" fill="#febc2e" />
+    <circle cx="7" cy="7" r="6.75" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="0.5" />
+  </g>
+  <g id="hover-center" transform="translate(20,0)">
+    <circle cx="7" cy="7" r="7" fill="#febc2e" />
+    <circle cx="7" cy="7" r="6.75" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="0.5" />
+    <path d="M 4,7 H 10" fill="none" stroke="#141414" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <g id="pressed-center" transform="translate(40,0)">
+    <circle cx="7" cy="7" r="7" fill="#febc2e" />
+    <circle cx="7" cy="7" r="6.75" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="0.5" />
+    <circle cx="7" cy="7" r="7" fill="#000000" fill-opacity="0.22" />
+    <path d="M 4,7 H 10" fill="none" stroke="#141414" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <g id="inactive-center" transform="translate(60,0)">
+    <circle cx="7" cy="7" r="7" fill="#4a4a4a" />
+    <circle cx="7" cy="7" r="6.75" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="0.5" />
+  </g>
+  <g id="hover-inactive-center" transform="translate(80,0)">
+    <circle cx="7" cy="7" r="7" fill="#4a4a4a" />
+    <circle cx="7" cy="7" r="6.75" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="0.5" />
+    <path d="M 4,7 H 10" fill="none" stroke="#d0d0d0" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <g id="pressed-inactive-center" transform="translate(100,0)">
+    <circle cx="7" cy="7" r="7" fill="#4a4a4a" />
+    <circle cx="7" cy="7" r="6.75" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="0.5" />
+    <circle cx="7" cy="7" r="7" fill="#000000" fill-opacity="0.22" />
+    <path d="M 4,7 H 10" fill="none" stroke="#d0d0d0" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <g id="deactivated-center" transform="translate(120,0)">
+    <circle cx="7" cy="7" r="7" fill="#4a4a4a" />
+    <circle cx="7" cy="7" r="6.75" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="0.5" />
+  </g>
+  <g id="deactivated-inactive-center" transform="translate(140,0)">
+    <circle cx="7" cy="7" r="7" fill="#4a4a4a" />
+    <circle cx="7" cy="7" r="6.75" fill="none" stroke="#000000" stroke-opacity="0.18" stroke-width="0.5" />
+  </g>
+</svg>

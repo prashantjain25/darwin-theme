@@ -1,0 +1,31 @@
+# Darwin Theme
+
+> Darwin is a dark, translucent, Mac-like desktop theme for KDE Plasma 6 (Wayland and X11) and LXQt / Lubuntu. It adds a slim top bar, a floating dock with icon magnification, a Spotlight-style search launcher (apps, files, calculator, currency), an Alt+Tab window switcher, traffic-light window buttons, rounded windows, WhiteSur icons and the Inter font. One command installs it, every change is backed up, and `./restore.sh` undoes it.
+
+Keywords: Mac-like Linux desktop theme, KDE Plasma 6 theme, dock with magnification KDE, Spotlight alternative KDE, LXQt theme, Lubuntu theme, WhiteSur, Wayland, Kubuntu.
+
+## Start here
+- [README.md](README.md): features, requirements (KDE tooling table), install, settings, troubleshooting, FAQ
+- [CONTRIBUTING.md](CONTRIBUTING.md): rules, how to run the tests, how to report a problem
+- [docs/LXQT.md](docs/LXQT.md): LXQt / Lubuntu details and package list
+- [THIRD_PARTY.md](THIRD_PARTY.md): licences of included and downloaded parts
+
+## Install
+```
+git clone https://github.com/prashantjain25/darwin-theme.git
+cd darwin-theme
+./install.sh --dry-run
+./install.sh
+```
+Undo with `./restore.sh`. Add `--install-deps` to fetch missing themes, fonts and the rounded-corners effect.
+
+## Key files
+- `install.sh`, `dock.sh`, `restore.sh`: entry points; they detect KDE or LXQt
+- `lib/kde.py`: KDE installer (files, settings, panels, backup and restore)
+- `assets/plasmoids/com.prashantjain25.darwin.dock`: the dock (Plasma widget)
+- `assets/spotlight`: the search launcher (Qt)
+- `assets/tabbox`: the Alt+Tab switcher
+- `config/theme.default.json`: all settings
+
+## Licence
+MIT for original work; GPL-3.0 for the WhiteSur-derived Kvantum styles; SIL OFL 1.1 for Inter. Not affiliated with Apple.

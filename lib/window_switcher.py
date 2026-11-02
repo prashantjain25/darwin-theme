@@ -258,7 +258,8 @@ class Switcher(QtWidgets.QWidget):
         for i, item in enumerate(self.items):
             x = self.padding + i * self.tile
             if i == self.selected:
-                p.setBrush(QtGui.QColor(0, 0, 0, 40))
+                dark = QtGui.QColor(self.args.background).lightness() < 128
+                p.setBrush(QtGui.QColor(255, 255, 255, 50) if dark else QtGui.QColor(0, 0, 0, 40))
                 p.drawRoundedRect(QtCore.QRectF(x, 20, self.tile, 108), 7, 7)
             icon = item['icon'].scaled(self.icon_size, self.icon_size,
                                        QtCore.Qt.AspectRatioMode.KeepAspectRatio,

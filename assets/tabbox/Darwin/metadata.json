@@ -1,0 +1,14 @@
+{
+    "KPackageStructure": "KWin/WindowSwitcher",
+    "KPlugin": {
+        "Id": "Darwin",
+        "Name": "Darwin",
+        "Description": "Light translucent per-window switcher with application labels below the selected icon",
+        "Icon": "preferences-system-windows-switcher-big-icons",
+        "License": "GPL-2.0-or-later",
+        "Authors": [
+            { "Name": "Darwin contributors" },
+            { "Name": "Martin Gräßlin", "Email": "mgraesslin@kde.org" }
+        ]
+    }
+}

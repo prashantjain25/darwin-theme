@@ -36,9 +36,9 @@
   },
   "switcher": {
     "style": "icons",
-    "background": "#dedede",
-    "foreground": "#1a1a1a",
-    "_style": "'icons' = native glass overlay with 88 px icons and a selected app label; 'list' = Openbox's text list. Run the switcher module after changing this.",
+    "background": "auto",
+    "foreground": "auto",
+    "_style": "background/foreground 'auto' follow the mode (dark glass in dark mode, light glass in light mode) or give #rrggbb. 'icons' = native glass overlay with 88 px icons and a selected app label; 'list' = Openbox's text list. Run the switcher module after changing this.",
     "translucent": true,
     "opacity": 67,
     "corner_radius": 20,
@@ -55,6 +55,8 @@
       "qlipper"
     ],
     "_hidden_tray_items": "Titles of tray items collapsed behind the chevron at the left of the tray group (click it to reveal them for a few seconds). Find titles with: busctl --user get-property <service> /StatusNotifierItem org.kde.StatusNotifierItem Title",
+    "shown_tray_items": [],
+    "_shown_tray_items": "KDE only: app tray items (by Title or Id) that stay visible. Every other app item is collapsed behind the tray chevron, matching the reference menu bar.",
     "show_drives": true
   },
   "dock": {

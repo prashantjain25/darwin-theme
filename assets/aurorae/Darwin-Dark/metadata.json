@@ -1,0 +1,15 @@
+{
+  "KPackageStructure": "KWin/Aurorae",
+  "KPlugin": {
+    "Id": "Darwin-Dark",
+    "Name": "Darwin Dark",
+    "Description": "Original compact dark Aurorae decoration with traffic-light controls.",
+    "Version": "1.0.0",
+    "License": "MIT",
+    "Authors": [
+      {
+        "Name": "Darwin KDE theme contributors"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "KPackageStructure": "Plasma/Theme",
+  "KPlugin": {
+    "Id": "Darwin-Dark",
+    "Name": "Darwin Dark",
+    "Description": "Original translucent charcoal panel and rounded floating dock, with standard KDE widget fallback.",
+    "Version": "1.0.0",
+    "License": "MIT",
+    "Authors": [
+      {
+        "Name": "Darwin KDE theme contributors"
+      }
+    ]
+  },
+  "X-Plasma-API": "5.0"
+}

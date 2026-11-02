@@ -7,6 +7,15 @@ import shlex
 from theme import load, resolve
 
 
+def switcher_color(cfg, key):
+    """'auto' (or unset) follows the theme mode: light glass in light mode, dark glass in dark mode."""
+    value = cfg['switcher'].get(key, 'auto')
+    if value not in (None, '', 'auto'):
+        return value
+    dark = cfg.get('mode', 'dark') == 'dark'
+    return {'background': '#1e1e20' if dark else '#dedede', 'foreground': '#f5f5f5' if dark else '#1a1a1a'}[key]
+
+
 def patch_rc(path, enabled):
     text = Path(path).read_text()
     # Keep the original bindings (including custom actions) for style=list.
@@ -45,8 +54,8 @@ def install():
     module.parent.mkdir(parents=True, exist_ok=True)
     module.write_text(Path(__file__).with_name('window_switcher.py').read_text())
     args = ['/usr/bin/python3', str(module), '--opacity', str(env['SWITCHER_OPACITY']),
-            '--background', cfg['switcher'].get('background', '#dedede'),
-            '--foreground', cfg['switcher'].get('foreground', '#1a1a1a'),
+            '--background', switcher_color(cfg, 'background'),
+            '--foreground', switcher_color(cfg, 'foreground'),
             '--font', cfg['fonts']['ui'], '--radius', str(env['SWITCHER_R'])]
     launcher.parent.mkdir(parents=True, exist_ok=True)
     launcher.write_text('#!/bin/sh\nmkdir -p "$HOME/.cache"\n'

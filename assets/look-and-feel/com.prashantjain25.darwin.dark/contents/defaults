@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: MIT
+[kdeglobals][KDE]
+widgetStyle=Breeze
+
+[kdeglobals][General]
+ColorScheme=DarwinDark
+AccentColor=0,145,255
+
+[kdeglobals][Icons]
+Theme=breeze-dark
+
+[plasmarc][Theme]
+name=Darwin-Dark
+
+[kwinrc][org.kde.kdecoration2]
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__Darwin-Dark
+BorderSize=Tiny
+BorderSizeAuto=false
+ButtonsOnLeft=XIA
+ButtonsOnRight=
+
+[auroraerc][Darwin-Dark]
+ButtonSize=1
+
+[kcminputrc][Mouse]
+cursorTheme=breeze_cursors

@@ -1,0 +1,15 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Id": "com.prashantjain25.darwin.dock",
+    "Name": "Darwin Dock",
+    "Description": "Compact native Wayland task dock with smooth icon magnification",
+    "Icon": "preferences-desktop-launch-feedback",
+    "Category": "Windows and Tasks",
+    "Version": "1.0.0",
+    "License": "MIT",
+    "Authors": [{"Name": "Darwin contributors"}]
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-Provides": ["org.kde.plasma.multitasking"]
+}

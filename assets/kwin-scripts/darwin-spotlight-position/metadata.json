@@ -1,0 +1,17 @@
+{
+  "KPlugin": {
+    "Id": "darwin-spotlight-position",
+    "Name": "Darwin Spotlight Placement",
+    "Description": "Place the Darwin launcher consistently on Wayland without moving other applications",
+    "Version": "1.0",
+    "License": "MIT",
+    "Authors": [
+      {
+        "Name": "Darwin Theme contributors"
+      }
+    ]
+  },
+  "KPackageStructure": "KWin/Script",
+  "X-Plasma-API": "javascript",
+  "X-Plasma-MainScript": "code/main.js"
+}

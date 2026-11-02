@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this theme, please cite it as below."
+title: "Darwin Theme: a dark, translucent desktop theme for KDE Plasma 6 and LXQt"
+abstract: "A Mac-like desktop theme for KDE Plasma 6 and LXQt / Lubuntu with a top bar, a magnifying dock, a Spotlight-style search launcher, an Alt+Tab switcher, rounded windows, WhiteSur icons and the Inter font."
+type: software
+license: MIT
+repository-code: "https://github.com/prashantjain25/darwin-theme"
+keywords:
+  - desktop theme
+  - linux theme
+  - kde plasma 6
+  - lxqt
+  - lubuntu
+  - dock
+  - spotlight
+  - whitesur
+  - wayland
+authors:
+  - family-names: "Jain"
+    given-names: "Prashant"

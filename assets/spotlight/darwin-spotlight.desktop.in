@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Application
+Name=Darwin Spotlight
+Comment=Search applications, files, and arithmetic
+Exec=/usr/bin/python3 @SPOTLIGHT_SCRIPT@ --mode apps
+Icon=system-search
+Terminal=false
+StartupNotify=true
+StartupWMClass=darwin-spotlight
+DBusActivatable=false
+Categories=Utility;
+Keywords=Spotlight;Search;Launcher;Calculator;
+Actions=files;calc;
+
+[Desktop Action files]
+Name=Search Files
+Exec=/usr/bin/python3 @SPOTLIGHT_SCRIPT@ --mode files
+Icon=system-file-manager
+
+[Desktop Action calc]
+Name=Calculator
+Exec=/usr/bin/python3 @SPOTLIGHT_SCRIPT@ --mode calc
+Icon=accessories-calculator

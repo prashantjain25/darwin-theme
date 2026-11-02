@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT
+[Settings]
+FallbackTheme=default
+
+# Off on purpose: Plasma reuses the panel mask as both blur region and input region, so a floating dock
+# that draws its own glass cannot have both a clickable/hoverable area and no blurred rectangle.
+[BlurBehindEffect]
+enabled=false
+
+[ContrastEffect]
+enabled=false
+
+[AdaptiveTransparency]
+enabled=true

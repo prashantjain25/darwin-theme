@@ -117,7 +117,7 @@ MISSING_NOTES=()
 # need_cmd <cmd> [required|optional]
 need_cmd() {
   local c="$1" kind="${2:-required}"
-  if have "$c"; then info "ok       $c"; return 0; fi
+  if have "$c"; then info "ok       $c"; [ "$c" = picom ] && check_picom_version; return 0; fi
   if [ "$kind" = optional ]; then info "optional $c (not found, feature skipped)"; return 0; fi
   info "MISSING  $c  (apt: ${PKG[$c]:-?})"
   MISSING_PKGS+=("${PKG[$c]:-$c}")
@@ -130,6 +130,18 @@ need_path() { # need_path <label> <note> <path>...
   info "MISSING  $label"
   MISSING_NOTES+=("$label: $note")
   return 1
+}
+
+# picom 12 introduced the window "rules" this theme uses for rounded corners and blur.
+check_picom_version() {
+  have picom || return 0
+  local major; major="$(picom --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+' | head -1 | cut -d. -f1)"
+  if [ -n "$major" ] && [ "$major" -lt 12 ]; then
+    info "OLD      picom $major (needs 12 or newer)"
+    MISSING_NOTES+=("picom $major is too old: rounded corners need picom 12 or newer. Install a newer build from https://github.com/yshui/picom")
+  else
+    info "ok       picom ${major:-?}"
+  fi
 }
 
 qt_style_plugins() {

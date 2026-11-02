@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640">
+  <!-- SPDX-License-Identifier: MIT; Original Darwin geometric artwork. -->
+  <g id="decoration-topleft" transform="translate(0,0)">
+    <path d="M 16,0 A 16,16 0 0 0 0,16 H 16 Z" fill="#141414" fill-opacity="1" />
+    <path d="M 16,0 A 16,16 0 0 0 0,16 H 1 A 15,15 0 0 1 16,1 Z" fill="#ffffff" fill-opacity="0.12" />
+  </g>
+  <g id="decoration-top" transform="translate(16,0)">
+    <rect x="0" y="0" width="24" height="16" fill="#141414" fill-opacity="1" />
+    <rect x="0" y="0" width="24" height="1" fill="#ffffff" fill-opacity="0.12" />
+  </g>
+  <g id="decoration-topright" transform="translate(40,0)">
+    <g transform="translate(16,0) scale(-1,1)">
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 16 Z" fill="#141414" fill-opacity="1" />
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 1 A 15,15 0 0 1 16,1 Z" fill="#ffffff" fill-opacity="0.12" />
+    </g>
+  </g>
+  <g id="decoration-left" transform="translate(0,16)">
+    <rect x="0" y="0" width="16" height="24" fill="#141414" fill-opacity="1" />
+    <rect x="0" y="0" width="1" height="24" fill="#ffffff" fill-opacity="0.12" />
+  </g>
+  <rect id="decoration-center" x="16" y="16" width="24" height="24" fill="#141414" fill-opacity="1" />
+  <g id="decoration-right" transform="translate(40,16)">
+    <rect x="0" y="0" width="16" height="24" fill="#141414" fill-opacity="1" />
+    <rect x="15" y="0" width="1" height="24" fill="#ffffff" fill-opacity="0.12" />
+  </g>
+  <g id="decoration-bottomleft" transform="translate(0,40)">
+    <g transform="translate(0,16) scale(1,-1)">
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 16 Z" fill="#141414" fill-opacity="1" />
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 1 A 15,15 0 0 1 16,1 Z" fill="#ffffff" fill-opacity="0.12" />
+    </g>
+  </g>
+  <g id="decoration-bottom" transform="translate(16,40)">
+    <rect x="0" y="0" width="24" height="16" fill="#141414" fill-opacity="1" />
+    <rect x="0" y="15" width="24" height="1" fill="#ffffff" fill-opacity="0.12" />
+  </g>
+  <g id="decoration-bottomright" transform="translate(40,40)">
+    <g transform="translate(16,16) scale(-1,-1)">
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 16 Z" fill="#141414" fill-opacity="1" />
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 1 A 15,15 0 0 1 16,1 Z" fill="#ffffff" fill-opacity="0.12" />
+    </g>
+  </g>
+  <g id="decoration-inactive-topleft" transform="translate(100,0)">
+    <path d="M 16,0 A 16,16 0 0 0 0,16 H 16 Z" fill="#141414" fill-opacity="1" />
+    <path d="M 16,0 A 16,16 0 0 0 0,16 H 1 A 15,15 0 0 1 16,1 Z" fill="#ffffff" fill-opacity="0.065" />
+  </g>
+  <g id="decoration-inactive-top" transform="translate(116,0)">
+    <rect x="0" y="0" width="24" height="16" fill="#141414" fill-opacity="1" />
+    <rect x="0" y="0" width="24" height="1" fill="#ffffff" fill-opacity="0.065" />
+  </g>
+  <g id="decoration-inactive-topright" transform="translate(140,0)">
+    <g transform="translate(16,0) scale(-1,1)">
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 16 Z" fill="#141414" fill-opacity="1" />
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 1 A 15,15 0 0 1 16,1 Z" fill="#ffffff" fill-opacity="0.065" />
+    </g>
+  </g>
+  <g id="decoration-inactive-left" transform="translate(100,16)">
+    <rect x="0" y="0" width="16" height="24" fill="#141414" fill-opacity="1" />
+    <rect x="0" y="0" width="1" height="24" fill="#ffffff" fill-opacity="0.065" />
+  </g>
+  <rect id="decoration-inactive-center" x="116" y="16" width="24" height="24" fill="#141414" fill-opacity="1" />
+  <g id="decoration-inactive-right" transform="translate(140,16)">
+    <rect x="0" y="0" width="16" height="24" fill="#141414" fill-opacity="1" />
+    <rect x="15" y="0" width="1" height="24" fill="#ffffff" fill-opacity="0.065" />
+  </g>
+  <g id="decoration-inactive-bottomleft" transform="translate(100,40)">
+    <g transform="translate(0,16) scale(1,-1)">
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 16 Z" fill="#141414" fill-opacity="1" />
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 1 A 15,15 0 0 1 16,1 Z" fill="#ffffff" fill-opacity="0.065" />
+    </g>
+  </g>
+  <g id="decoration-inactive-bottom" transform="translate(116,40)">
+    <rect x="0" y="0" width="24" height="16" fill="#141414" fill-opacity="1" />
+    <rect x="0" y="15" width="24" height="1" fill="#ffffff" fill-opacity="0.065" />
+  </g>
+  <g id="decoration-inactive-bottomright" transform="translate(140,40)">
+    <g transform="translate(16,16) scale(-1,-1)">
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 16 Z" fill="#141414" fill-opacity="1" />
+      <path d="M 16,0 A 16,16 0 0 0 0,16 H 1 A 15,15 0 0 1 16,1 Z" fill="#ffffff" fill-opacity="0.065" />
+    </g>
+  </g>
+  <rect id="decoration-maximized-center" x="0" y="100" width="48" height="32" fill="#141414" />
+  <rect id="decoration-maximized-inactive-center" x="100" y="100" width="48" height="32" fill="#141414" />
+</svg>

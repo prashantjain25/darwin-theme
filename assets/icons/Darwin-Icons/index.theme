@@ -1,0 +1,12 @@
+[Icon Theme]
+Name=Darwin Icons
+Comment=WhiteSur icons with left/right chevrons for the tray expander (Plasma uses arrow-down/arrow-up on a top panel)
+Inherits=WhiteSur-dark,breeze-dark,hicolor
+Directories=scalable/actions
+
+[scalable/actions]
+Size=16
+MinSize=8
+MaxSize=512
+Type=Scalable
+Context=Actions

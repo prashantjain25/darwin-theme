@@ -1,0 +1,20 @@
+/* Darwin: scoped CSD/menu overrides; do not replace the application theme. */
+headerbar { min-height: 32px; padding: 0 8px; background-color: #141414; background-image: none; color: #f5f5f5; }
+headerbar:backdrop { background-color: #141414; }
+window.csd { border-radius: 16px; }
+window.csd:not(.maximized):not(.tiled) headerbar:first-child { border-radius: 16px 16px 0 0; }
+window.maximized headerbar, window.tiled headerbar { border-radius: 0; }
+headerbar button.titlebutton.close, headerbar button.titlebutton.minimize, headerbar button.titlebutton.maximize {
+  min-width: 14px; min-height: 14px; padding: 0; margin: 0 4px 0 5px;
+  border-radius: 9999px; border: 1px solid rgba(0,0,0,0.12);
+  background-image: none; box-shadow: none; color: transparent;
+}
+headerbar button.titlebutton image { opacity: 0; }
+headerbar button.titlebutton.close { background-color: #ff736a; }
+headerbar button.titlebutton.minimize { background-color: #febc2e; }
+headerbar button.titlebutton.maximize { background-color: #19c332; }
+headerbar button.titlebutton:backdrop { background-color: #545454; }
+headerbar button.titlebutton:hover image { opacity: 0.75; color: #202020; }
+menu, .context-menu { padding: 5px 12px; border-radius: 14px; background-color: #242424; color: #f5f5f5; border: 1px solid rgba(255,255,255,0.18); }
+menuitem { min-height: 24px; padding: 0 8px; border-radius: 8px; }
+menuitem:hover { background-color: #0091ff; color: #ffffff; }
