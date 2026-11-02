@@ -9,9 +9,39 @@ window, traffic-light window buttons, rounded windows, and the WhiteSur icons an
 
 One command installs it, every change is backed up, and one command undoes it.
 
-![Darwin Theme for KDE Plasma 6: window, top bar and dock artwork](_resources/kde-preview.png)
+## Screenshots
 
-*A picture of the shipped artwork, not a screenshot of a running desktop.*
+### KDE Plasma 6
+
+![Darwin Theme on KDE Plasma 6: top bar and floating dock on a clean desktop](_resources/kde-desktop.png)
+
+| Top bar (left and right ends) |
+|---|
+| ![KDE top bar: Apple-style launcher and menu on the left, short tray and clock on the right, curved bottom corners](_resources/kde-menubar.png) |
+
+| Dock | Dock while hovering (magnification) |
+|---|---|
+| ![KDE dock with pinned apps and trash](_resources/kde-dock.png) | ![KDE dock magnifying the icon under the pointer](_resources/kde-dock-zoom.png) |
+
+| Search launcher (Super + Space) | Window buttons |
+|---|---|
+| ![KDE Spotlight-style launcher showing apps and matching files](_resources/kde-spotlight.png) | ![KDE window title bar with traffic-light buttons](_resources/kde-titlebar.png) |
+
+### LXQt / Lubuntu
+
+| Menu bar | Dock |
+|---|---|
+| ![LXQt menu bar with launcher, tray and clock](_resources/menubar.png) | ![LXQt dock with Plank](_resources/dock.png) |
+
+| Window controls | Menus |
+|---|---|
+| ![LXQt traffic-light window controls](_resources/titlebar.png) | ![LXQt translucent menu](_resources/menu.png) |
+
+![LXQt file manager in the dark theme](_resources/filemanager.png)
+
+Dock zoom on LXQt (the icon under the pointer grows):
+
+![LXQt dock zoom animation](_resources/dock-zoom.gif)
 
 ## Contents
 

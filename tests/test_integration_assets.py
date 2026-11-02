@@ -10,7 +10,7 @@ class IntegrationAssetTests(unittest.TestCase):
         harness = r'''
 const fs = require('fs');
 let next=1; const ps=[];
-function widget(type) {return {type,configGroup:[],writeConfig(k,v){this[k]=v;},readConfig(k,d){return this[k] ?? d;}};}
+function widget(type) {return {type,configGroup:[],writeConfig(k,v){this[k]=v;},reloadConfig(){},readConfig(k,d){return this[k] ?? d;}};}
 global.Panel=function(){this.id=next++;this.screen=0;this.ws=[];this.widgets=()=>this.ws;this.addWidget=(t)=>{let w=widget(t);this.ws.push(w);return w;};this.configGroup=[];this.writeConfig=(k,v)=>this[k]=v;ps.push(this);};
 global.panels=()=>ps;global.print=()=>{};
 let p=new Panel();p.location='top';p.addWidget('org.kde.plasma.appmenu');p.addWidget('my.custom.widget');

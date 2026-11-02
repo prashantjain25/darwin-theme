@@ -42,10 +42,12 @@
     clock.writeConfig('use24hFormat', 0);
     clock.writeConfig('fontFamily', options.font || 'Inter');
     clock.writeConfig('autoFontAndSize', false);
-    clock.writeConfig('fontSize', 10);
+    // 9, not 10: at 10 the clock stacks time over date as soon as the time needs two digits (10:xx to 12:xx).
+    clock.writeConfig('fontSize', 9);
     clock.writeConfig('fontWeight', 600);
     clock.writeConfig('fontStyleName', 'SemiBold');
     clock.writeConfig('dateDisplayFormat', 'BesideTime');
+    clock.reloadConfig();   // apply to the running clock now, not only after the next shell restart
     }
     var dock;
     if (options.dock !== false) {
