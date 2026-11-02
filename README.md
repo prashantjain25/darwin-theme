@@ -48,7 +48,8 @@ What each group provides:
 | `qt5-style-kvantum`, `qt6-style-kvantum` | Qt app appearance (Kvantum) |
 | `fonts-inter` | interface font |
 | `rofi`, `qalc`, `plocate` | Spotlight-style launcher: apps, calculator and currency, file search |
-| `python3`, `curl`, `unzip`, `git`, `fontconfig` | installer scripts and font setup |
+| `python3`, `python3-pyqt6` | installer scripts, and the window switcher's PyQt6 dialog |
+| `curl`, `unzip`, `git`, `fontconfig` | downloads, font setup and cloning the WhiteSur themes |
 | `x11-utils`, `x11-xserver-utils` | `xprop`, `xwininfo`, `xrandr`, `setxkbmap`, `xmodmap` |
 | `xdg-utils` | `xdg-open` for file search results |
 | `libglib2.0-bin`, `libglib2.0-dev-bin`, `libgtk-3-bin` | GTK theme build and `gsettings` |
