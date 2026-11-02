@@ -20,7 +20,7 @@ traffic-light window controls, translucent menus and an Alt+Tab window switcher.
 - Traffic-light window controls and thin window borders.
 - A top panel with an application launcher, system tray and clock.
 - A dock with shortcuts to your applications.
-- An Alt+Tab switcher with large icons and the selected application's name.
+- An Alt+Tab switcher that shows one icon per window, with the selected name below it.
 - Inter for interface text and Maple Mono NF for monospace text.
 
 ## Requirements
@@ -33,8 +33,6 @@ The window switcher requires an X11 session.
 | Desktop | `lxqt`, `openbox`, `lxqt-panel`, `pcmanfm-qt`, `lxqt-themes` |
 | Window effects | `picom` 12 or later |
 | Qt appearance | `qt5-style-kvantum`, `qt6-style-kvantum` |
-| Window switcher | `python3-pyqt6`, `libx11-6` |
-| Optional dock | `plank` |
 | Installation tools | `python3`, `curl`, `unzip`, `git`, `fontconfig`, `x11-utils`, `libglib2.0-bin`, `libglib2.0-dev-bin`, `libgtk-3-bin` |
 | GTK theme | [WhiteSur GTK](https://github.com/vinceliuice/WhiteSur-gtk-theme) |
 | Icons | [WhiteSur icons](https://github.com/vinceliuice/WhiteSur-icon-theme) |
@@ -110,16 +108,17 @@ restarting desktop components. Run either script with `--help` for all options.
 Hold Alt and press Tab to move between windows. Alt+Shift+Tab moves backward.
 Release Alt to select a window, or press Escape to cancel.
 
-The switcher shows windows from all desktops. Its background is translucent and
-blurred; icons and text remain opaque.
+The switcher is Openbox's icon dialog. It shows one icon per window, with the
+selected window's name below. `switcher.style` in `config/theme.json` can be set to
+`list` for the text list instead.
 
 ## Dock
 
 Run `./dock.sh --dock-only` to set up just the dock, or `--menubar-only` for just
 the top panel.
 
-For a translucent dock background with opaque icons, set `dock.backend` to
-`plank`, install Plank, and run `./dock.sh --dock-only` again.
+The dock is sized from your screen resolution (`dock.scale`, `auto` by default).
+It is hidden by default and appears when the pointer reaches the bottom edge.
 
 Change the dock's behavior with:
 
@@ -127,12 +126,15 @@ Change the dock's behavior with:
 ./dock.sh --dock-mode auto-hide
 ```
 
-Other modes are `reserve`, `always-on-top` and `intelligent-hide`.
-Plank does not support the separator or the gap below the dock.
+Other modes are `reserve` (the full bottom edge is reserved), `always-on-top`
+and `intelligent-hide`. The LXQt panel does not respond to window overlap, so
+`intelligent-hide` behaves like `auto-hide` here.
 
 ## Limitations
 
-- Application menus such as File and Edit stay inside their windows.
+- Application menus such as File and Edit stay inside their windows. LXQt has no
+  global menu host, and the Qt and GTK menu exporters need a registrar that is not
+  packaged for this release.
 - Menu spacing can differ between Qt and GTK applications.
 - If the file manager opens a blank window after a desktop restart, log out and back in.
 
