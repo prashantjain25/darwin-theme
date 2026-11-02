@@ -27,6 +27,26 @@ console.log('PASS: native panel semantics and idempotence');
         result = subprocess.run(['node', '-e', harness, str(ROOT / 'assets/layout.js')], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_clock_shows_time_only_unless_the_date_is_requested(self):
+        harness = r'''
+const fs = require('fs');
+function widget(type) {return {type,writeConfig(k,v){this[k]=v;},reloadConfig(){},readConfig(k,d){return this[k] ?? d;},widgets(){return [];}};}
+function run(options) {
+  const ps=[]; let next=1;
+  global.Panel=function(){this.id=next++;this.screen=0;this.ws=[];this.widgets=()=>this.ws;this.addWidget=(t)=>{let w=widget(t);this.ws.push(w);return w;};ps.push(this);};
+  global.panels=()=>ps;global.print=()=>{};
+  global.DARWIN_OPTIONS=Object.assign({dock:false},options);
+  eval(fs.readFileSync(process.argv[1],'utf8'));
+  return ps[0].ws.find(w=>w.type==='org.kde.plasma.digitalclock');
+}
+const plain=run({}), dated=run({clockDate:true});
+if(plain.showDate!==false||plain.fontSize!==10)throw Error('time-only clock: '+plain.showDate+' '+plain.fontSize);
+if(dated.showDate!==true||dated.fontSize!==9)throw Error('dated clock: '+dated.showDate+' '+dated.fontSize);
+console.log('PASS');
+'''
+        result = subprocess.run(['node', '-e', harness, str(ROOT / 'assets/layout.js')], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_gtk_overrides_have_toolkit_specific_controls(self):
         for version, selector in [('3', 'button.titlebutton'), ('4', 'windowcontrols button')]:
             css = (ROOT / f'assets/gtk/gtk{version}.css')

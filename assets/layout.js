@@ -36,14 +36,15 @@
     ensure(top, 'org.kde.plasma.systemtray');
     var clock = ensure(top, 'org.kde.plasma.digitalclock');
     clock.currentConfigGroup = ['Appearance'];
-    clock.writeConfig('showDate', true);
+    // Time only by default. With the date shown the clock needs a smaller font to stay on one line.
+    clock.writeConfig('showDate', options.clockDate === true);
     clock.writeConfig('dateFormat', 'custom');
     clock.writeConfig('customDateFormat', 'ddd MMM d');
     clock.writeConfig('use24hFormat', 0);
     clock.writeConfig('fontFamily', options.font || 'Inter');
     clock.writeConfig('autoFontAndSize', false);
-    // 9, not 10: at 10 the clock stacks time over date as soon as the time needs two digits (10:xx to 12:xx).
-    clock.writeConfig('fontSize', 9);
+    // With the date, 9 not 10: at 10 the clock stacks time over date once the time needs two digits (10:xx to 12:xx).
+    clock.writeConfig('fontSize', options.clockDate === true ? 9 : 10);
     clock.writeConfig('fontWeight', 600);
     clock.writeConfig('fontStyleName', 'SemiBold');
     clock.writeConfig('dateDisplayFormat', 'BesideTime');

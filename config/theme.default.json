@@ -49,6 +49,8 @@
     "height": 34,
     "clock_format": "ddd MMM d  h:mm AP",
     "clock_semibold": true,
+    "show_date": false,
+    "_show_date": "KDE only: also show the weekday and date next to the time in the top bar. Off by default (time only). LXQt uses clock_format above.",
     "hidden_tray_items": [
       "Free Download Manager",
       "lxqt-notificationd",

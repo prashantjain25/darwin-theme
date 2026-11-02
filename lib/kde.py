@@ -86,7 +86,7 @@ def layout_script(cfg, menubar=True, dock=True, dock_mode=None):
                'barHeight': cfg['menubar']['height'], 'font': cfg['fonts']['ui'],
                'hiding': DOCK_MODES[norm_mode(dock_mode or cfg['dock']['mode'])],
                'dockIcon': metrics[0], 'dockHeight': int(metrics[1]),
-               'startIcon': start_icon(cfg),
+               'startIcon': start_icon(cfg), 'clockDate': bool(cfg['menubar'].get('show_date', False)),
                'dockWidget': DOCK_PLASMOID if (locations()['data'] / 'plasma/plasmoids' / DOCK_PLASMOID / 'metadata.json').is_file() else ''}
     return 'var DARWIN_OPTIONS = ' + json.dumps(options) + ';\n' + (ROOT / 'assets/layout.js').read_text()
 

@@ -64,7 +64,7 @@ Dock zoom on LXQt (the icon under the pointer grows):
 
 | | KDE Plasma 6 | LXQt / Lubuntu |
 |---|---|---|
-| Top bar | Apple-style launcher icon, app menu, one-line clock, short tray with a `<` arrow for the rest. Square top corners, curved bottom corners | Launcher, tray and clock |
+| Top bar | Apple-style launcher icon, app menu, clock (time only, date optional), short tray with a `<` arrow for the rest. Square top corners, curved bottom corners | Launcher, tray and clock |
 | Dock | Floating dock with smooth icon magnification, your pinned apps kept in order | Plank dock with magnification |
 | Search launcher | Qt launcher: apps, files, calculator, currency | rofi launcher: apps, files, calculator |
 | Alt+Tab | Dark or light glass switcher, one icon per window, name under the selected icon | Same style |
@@ -174,6 +174,7 @@ python3 lib/theme.py validate     # check your file
 | `fonts.ui`, `fonts.ui_size`, `fonts.mono` | Interface font, its size, and the code font |
 | `window.corner_radius` | How round the windows are |
 | `menubar.enabled`, `menubar.height` | Top bar on or off, and its height |
+| `menubar.show_date` | KDE: also show the weekday and date next to the time (off by default, so the bar shows the time only) |
 | `menubar.hidden_tray_items`, `menubar.shown_tray_items` | Tray icons to always hide, or (KDE) to keep visible |
 | `dock.enabled`, `dock.mode`, `dock.icon_size` | Dock on or off, hiding behaviour, icon size |
 | `switcher.style` | `icons` (new switcher) or `list` (plain text list, LXQt) |
