@@ -19,6 +19,10 @@ class InstallerTests(unittest.TestCase):
                     'XDG_DATA_HOME': str(self.home / 'data'),
                     'XDG_STATE_HOME': str(self.home / 'state')}
 
+    @staticmethod
+    def pyqt6_available():
+        return subprocess.run(['/usr/bin/python3', '-c', 'import PyQt6.QtWidgets, PyQt6.QtNetwork'], capture_output=True).returncode == 0
+
     def run_cli(self, *args):
         return subprocess.run([sys.executable, str(ROOT / 'lib/kde.py'), *args],
                               env=self.env, capture_output=True, text=True)
@@ -39,9 +43,12 @@ class InstallerTests(unittest.TestCase):
         self.assertTrue((self.home / 'data/aurorae/themes/Darwin-Dark').is_dir())
         self.assertTrue((self.home / 'data/kwin/tabbox/Darwin/metadata.json').is_file())
         self.assertTrue((self.home / 'data/plasma/plasmoids/com.prashantjain25.darwin.dock/metadata.json').is_file())
-        self.assertTrue((self.home / 'data/darwin-theme/spotlight/spotlight.py').is_file())
         self.assertIn('LayoutName=Darwin', (config / 'kwinrc').read_text())
-        self.assertIn('--mode apps', (self.home / 'data/applications/darwin-spotlight.desktop').read_text())
+        if self.pyqt6_available():
+            self.assertTrue((self.home / 'data/darwin-theme/spotlight/spotlight.py').is_file())
+            self.assertIn('--mode apps', (self.home / 'data/applications/darwin-spotlight.desktop').read_text())
+        else:   # without PyQt6 the launcher is skipped on purpose and KRunner stays
+            self.assertFalse((self.home / 'data/applications/darwin-spotlight.desktop').exists())
         result = self.run_cli('restore', '--no-reload')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual((config / 'kdeglobals').read_bytes(), original)
@@ -177,6 +184,18 @@ class InstallerTests(unittest.TestCase):
         self.assertTrue(calls, 'the checks should search for the plugins')
         self.assertNotIn(True, calls, 'recursive searches are too slow')
         self.assertLess(elapsed, 1.0)
+
+    def test_missing_gnome_schema_skips_gtk_live_settings_instead_of_failing(self):
+        code = (
+            "import sys; sys.path.insert(0, %r)\n"
+            "import kde\n"
+            "kde.gtk_settings_available = lambda: False\n"
+            "kde.shutil.which = lambda name: '/usr/bin/gsettings' if name == 'gsettings' else None\n"
+            "kde.apply_runtime(None, kde.configuration())\n"   # a Transaction is not needed when nothing is written
+        ) % str(ROOT / 'lib')
+        result = subprocess.run([sys.executable, '-c', code], env=self.env, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('GTK live settings were skipped', result.stderr)
 
     def test_install_rejects_symlink_parents_and_preserves_original_dotfiles(self):
         for root, parent, filename in [('config', 'gtk-3.0', 'settings.ini'),
@@ -352,6 +371,8 @@ for alias, hiding in [('autohide', 'autohide'), ('intelligent', 'dodgewindows')]
         import shutil
         if not shutil.which('gsettings'):
             self.skipTest('gsettings not installed')
+        if 'org.gnome.desktop.interface' not in subprocess.run(['gsettings', 'list-schemas'], capture_output=True, text=True).stdout.split():
+            self.skipTest('GNOME interface settings schema not installed')
         self.env['GSETTINGS_BACKEND'] = 'keyfile'
         program = '''
 import sys

@@ -327,6 +327,18 @@ def find_icon_theme(paths, name):
 
 
 @functools.lru_cache(maxsize=None)
+def gtk_settings_available():
+    """GTK's live settings need gsettings and the GNOME interface schema; a bare system may have neither."""
+    if not shutil.which('gsettings'):
+        return False
+    try:
+        out = subprocess.run(['gsettings', 'list-schemas'], capture_output=True, text=True, timeout=20).stdout
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return 'org.gnome.desktop.interface' in out.split()
+
+
+@functools.lru_cache(maxsize=None)
 def qt_launcher_available():
     """The Spotlight launcher needs PyQt6; without it KRunner (Plasma's own launcher) is used instead."""
     try:
@@ -643,7 +655,10 @@ def configure_panels(tx, paths, cfg):
 
 def apply_runtime(tx, cfg):
     """Synchronize GTK's live settings provider, with reversible values."""
-    if shutil.which('gsettings'):
+    if not gtk_settings_available() and shutil.which('gsettings'):
+        print('Note: the GNOME interface settings schema is not installed, so GTK live settings were skipped '
+              '(the GTK config files are still written).', file=sys.stderr)
+    if gtk_settings_available():
         gtk_theme, icon_theme = WHITESUR[cfg['mode']]
         values = {'font-name': f"{cfg['fonts']['ui']} {cfg['fonts']['ui_size']}",
                   'color-scheme': 'prefer-dark'}
