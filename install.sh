@@ -239,12 +239,14 @@ mod_launcher() {
   have plocate || warn "plocate missing: file search needs it (sudo apt install plocate)"
   tx "$REPO_DIR/assets/launcher/spotlight.rasi" "$dir/spotlight.rasi"
   # the rofi theme uses the icon theme and UI font from config
-  run sed -i -e "s|@ICON_THEME@|$ICON_THEME|" -e "s|@FONT_UI@|$FONT_UI|g" -e "s|@SPOT_R@|$MENU_R|" "$dir/spotlight.rasi"
+  run sed -i -e "s|@ICON_THEME@|$ICON_THEME|" -e "s|@FONT_UI@|$FONT_UI|g" -e "s|@SPOT_R@|$MENU_R|" -e "s|@ACCENT@|$ACCENT|g" "$dir/spotlight.rasi"
   for f in spotlight-files spotlight-calc; do install_file "$REPO_DIR/assets/launcher/$f" "$dir/$f"; run chmod +x "$dir/$f"; done
   install_file "$REPO_DIR/assets/launcher/spotlight" "$HOME/.local/bin/spotlight"
   run chmod +x "$HOME/.local/bin/spotlight"
   backup "$HOME/.config/openbox/rc.xml"
-  run python3 "$REPO_DIR/lib/openbox_rc.py" keybind "$HOME/.config/openbox/rc.xml" "W-space" "$HOME/.local/bin/spotlight"
+  for kb in "W-space:apps" "W-S-space:files" "W-C-space:calc"; do
+    run python3 "$REPO_DIR/lib/openbox_rc.py" keybind "$HOME/.config/openbox/rc.xml" "${kb%%:*}" "$HOME/.local/bin/spotlight ${kb##*:}"
+  done
   [ "$DRY_RUN" = 0 ] && openbox --reconfigure 2>/dev/null || true
 }
 

@@ -25,8 +25,8 @@ def patch(path, theme, size, font="Inter", switcher="icons"):
 def add_keybind(path, key, command):
     """add <keybind key=KEY> running COMMAND to rc.xml unless it is already bound to that key"""
     t = open(path, encoding="utf-8").read()
-    if re.search(r'<keybind key="%s">' % re.escape(key), t):
-        return
+    # replace an existing binding for this key so a changed command takes effect
+    t = re.sub(r'  <keybind key="%s">.*?</keybind>\n' % re.escape(key), "", t, flags=re.S)
     block = ('  <keybind key="%s">\n    <action name="Execute">\n      <command>%s</command>\n'
              '    </action>\n  </keybind>\n') % (key, command)
     t = t.replace("</keyboard>", block + "  </keyboard>", 1)
