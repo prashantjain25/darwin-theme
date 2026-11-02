@@ -13,6 +13,10 @@ traffic-light window controls, translucent menus and an Alt+Tab window switcher.
 
 ![File manager](_resources/filemanager.png)
 
+Dock zoom (the icon under the pointer grows, as on macOS):
+
+![Dock zoom](_resources/dock-zoom.gif)
+
 ## Features
 
 - Dark themes for Qt and GTK applications.
@@ -34,7 +38,7 @@ Install every package the scripts use with one command:
 sudo apt install \
   lxqt lxqt-themes openbox picom pcmanfm-qt \
   qt5-style-kvantum qt6-style-kvantum \
-  fonts-inter rofi qalc plocate \
+  fonts-inter rofi qalc plocate plank \
   python3 curl unzip git fontconfig x11-utils x11-xserver-utils xdg-utils \
   libglib2.0-bin libglib2.0-dev-bin libgtk-3-bin
 ```
@@ -48,6 +52,7 @@ What each group provides:
 | `qt5-style-kvantum`, `qt6-style-kvantum` | Qt app appearance (Kvantum) |
 | `fonts-inter` | interface font |
 | `rofi`, `qalc`, `plocate` | Spotlight-style launcher: apps, calculator and currency, file search |
+| `plank` | the dock, with icon zoom |
 | `python3`, `python3-pyqt6` | installer scripts, and the window switcher's PyQt6 dialog |
 | `curl`, `unzip`, `git`, `fontconfig` | downloads, font setup and cloning the WhiteSur themes |
 | `x11-utils`, `x11-xserver-utils` | `xprop`, `xwininfo`, `xrandr`, `setxkbmap`, `xmodmap` |
@@ -109,7 +114,7 @@ Run `./install.sh --configure` to choose your settings, or edit
 | `fonts.mono` | `Maple Mono NF` | Monospace font |
 | `switcher.style` | `icons` | Icon switcher or Openbox's `list` view |
 | `switcher.opacity` | `67` | Background opacity, from 30 to 100; icons and text stay opaque |
-| `dock.backend` | `lxqt-panel` | Use the LXQt panel or `plank` for the dock |
+| `dock.backend` | `plank` | `plank` (icon zoom) or `lxqt-panel` (simpler, no zoom) |
 | `dock.icon_size` | `36` | Dock icon size in pixels |
 | `dock.apps` | See defaults | Applications shown in the dock |
 
@@ -139,8 +144,12 @@ selected window's name below. `switcher.style` in `config/theme.json` can be set
 Run `./dock.sh --dock-only` to set up just the dock, or `--menubar-only` for just
 the top panel.
 
-The dock is sized from your screen resolution (`dock.scale`, `auto` by default).
-It is hidden by default and appears when the pointer reaches the bottom edge.
+The dock uses [Plank](https://launchpad.net/plank). Icons grow smoothly under the
+pointer. The dock is sized from your screen resolution (`dock.scale`, `auto` by
+default), and it hides until the pointer reaches the bottom edge.
+
+The separator between the apps and the folders and trash is a thin line. It takes
+the width of one icon, so the gap next to it is wider than the gaps between icons.
 
 Change the dock's behavior with:
 
@@ -158,6 +167,8 @@ and `intelligent-hide`. The LXQt panel does not respond to window overlap, so
   global menu host, and the Qt and GTK menu exporters need a registrar that is not
   packaged for this release.
 - Menu spacing can differ between Qt and GTK applications.
+- The dock has no blur behind it. Plank can only blur its whole window, which
+  would also blur the empty strip across the bottom of the screen.
 - If the file manager opens a blank window after a desktop restart, log out and back in.
 
 ## License and credits
