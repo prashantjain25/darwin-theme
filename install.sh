@@ -158,7 +158,14 @@ install_css_block() { # install_css_block <dst css>
 mod_gtk() {
   step "GTK (theme, menus, fonts)"
   local theme="$GTK_SOURCE"
-  if [ "$MODE" = dark ]; then build_gtk_dark; theme="WhiteSur-Dark-Black"; fi
+  if [ "$MODE" = dark ]; then
+    build_gtk_dark; theme="WhiteSur-Dark-Black"
+    # Root-run apps (GParted) read /usr/share/themes, not the home folder.
+    if [ "$DRY_RUN" != 1 ] && ! diff -rq "$HOME/.themes/WhiteSur-Dark-Black" /usr/share/themes/WhiteSur-Dark-Black >/dev/null 2>&1; then
+      warn "root apps such as GParted use a different black. To match, run once:"
+      info "sudo rm -rf /usr/share/themes/WhiteSur-Dark-Black && sudo cp -r \"$HOME/.themes/WhiteSur-Dark-Black\" /usr/share/themes/"
+    fi
+  fi
   install_css_block "$HOME/.config/gtk-3.0/gtk.css"
   install_css_block "$HOME/.config/gtk-4.0/gtk.css"
   local prefer=true; [ "$MODE" = light ] && prefer=false
