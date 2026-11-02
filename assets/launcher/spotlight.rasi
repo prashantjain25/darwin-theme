@@ -1,13 +1,13 @@
-/* Spotlight-style launcher (rofi). Sizes from the macOS Spotlight reference:
-   680 px wide, 14 px corners, 1 px hairline, search field Inter 19, 7 result lines,
-   30 px result icons, 7 px / 12 px row padding. Colours follow the dark theme. */
+/* Spotlight-style launcher (rofi). Sizes come from the Figma macOS 26 kit only:
+   Search Field: 6 px radius, 8 px left / 4 px right padding, 2 px icon gap,
+   16 px magnifying glass, SF text 13 px (= Inter 10 pt). Colours follow the dark theme. */
 configuration {
     modi: "drun";
     show-icons: true;
     icon-theme: "@ICON_THEME@";
     drun-display-format: "{name}";
     display-drun: "";
-    font: "@FONT_UI@ 13";
+    font: "@FONT_UI@ 10";
     hover-select: true;
     click-to-exit: true;
 }
@@ -21,9 +21,8 @@ window {
     location: north;
     anchor: north;
     y-offset: 22%;
-    width: 680px;
     border: 1px;
-    border-radius: @SPOT_R@px;
+    border-radius: 6px;
     border-color: rgba(255, 255, 255, 18%);
     background-color: rgba(40, 40, 44, 96%);
 }
@@ -35,8 +34,8 @@ mainbox {
 
 inputbar {
     children: [ icon-search, entry ];
-    padding: 14px 18px;
-    spacing: 12px;
+    padding: 4px 8px 4px 8px;
+    spacing: 2px;
     border: 0px 0px 1px 0px;
     border-color: rgba(255, 255, 255, 10%);
 }
@@ -44,14 +43,14 @@ inputbar {
 icon-search {
     expand: false;
     filename: "system-search-symbolic";
-    size: 24px;
+    size: 16px;
     vertical-align: 0.5;
 }
 
 entry {
     placeholder: "Spotlight Search";
     placeholder-color: rgba(255, 255, 255, 45%);
-    font: "@FONT_UI@ 19";
+    font: "@FONT_UI@ 10";
     vertical-align: 0.5;
     cursor: text;
 }
