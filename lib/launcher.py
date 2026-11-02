@@ -12,6 +12,7 @@ import subprocess
 import sys
 
 REF_W, REF_H = 1512, 982                      # Figma kit frame, pt
+WINDOW_W_PCT = 25                             # not from Figma: launcher width as % of screen width
 FIELD_W, FIELD_H = 120, 24                    # Search Field component
 PCT = {
     "radius":    6 / REF_H * 100,            # corner radius (height based)
@@ -34,9 +35,14 @@ def screen_size():
 def main():
     tpl, out = sys.argv[1], sys.argv[2]
     w, h = (int(sys.argv[3]), int(sys.argv[4])) if len(sys.argv) > 4 else screen_size()
-    px = lambda key, axis: round(PCT[key] / 100 * (w if axis == "w" else h))
-    font_pt = round(PCT["font"] / 100 * h * 72 / 96)   # px -> pt at 96 dpi
+    # one uniform scale for every metric (screen width / Figma frame width), as the dock uses,
+    # so proportions stay the same on any aspect ratio
+    s = w / REF_W
+    px = lambda key, axis: round(PCT[key] / 100 * REF_W * s)
+    font_pt = round(13 * s * 72 / 96)               # SF 13 px at this scale -> pt (96 dpi)
+    win_w = round(WINDOW_W_PCT / 100 * w)           # not in Figma: window width as % of screen width
     vals = {
+        "@SPOT_WIDTH@": win_w,
         "@SPOT_RADIUS@": px("radius", "h"),
         "@SPOT_PAD_L@": px("pad_left", "w"),
         "@SPOT_PAD_R@": px("pad_right", "w"),
