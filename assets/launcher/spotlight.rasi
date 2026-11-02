@@ -1,19 +1,15 @@
-/* Spotlight-style launcher (rofi). Source: Figma macOS 26 kit, Search Field component (120 x 24 px).
-   All metrics as a percentage of that field:
-     corner radius      6 px  = 25 % of its height
-     left padding       8 px  = 6.7 % of its width
-     right padding      4 px  = 3.3 % of its width
-     icon gap           2 px  = 1.7 % of its width
-     magnifying glass  16 px  = 66.7 % of its height (16 x 15 in Figma)
-     text               13 px = 54 % of its height (SF 13 px, here Inter 10 pt)
-   The values below are the px equivalents of those percentages at the Figma size. */
+/* Spotlight-style launcher (rofi). Source: Figma macOS 26 kit, Search Field (120 x 24 pt)
+   on the 1512 x 982 pt frame. Every value below is a placeholder that lib/launcher.py fills
+   with the pixels for the user's screen: each Figma size is a percentage of the frame,
+   so widths and horizontal padding scale with screen width, heights, radius and font with
+   screen height. */
 configuration {
     modi: "drun";
     show-icons: true;
     icon-theme: "@ICON_THEME@";
     drun-display-format: "{name}";
     display-drun: "";
-    font: "@FONT_UI@ 10";
+    font: "@FONT_UI@ @SPOT_FONT_PT@";
     hover-select: true;
     click-to-exit: true;
 }
@@ -28,7 +24,7 @@ window {
     anchor: north;
     y-offset: 22%;
     border: 1px;
-    border-radius: 6px;
+    border-radius: @SPOT_RADIUS@px;
     border-color: rgba(255, 255, 255, 18%);
     background-color: rgba(40, 40, 44, 96%);
 }
@@ -40,8 +36,8 @@ mainbox {
 
 inputbar {
     children: [ icon-search, entry ];
-    padding: 4px 8px 4px 8px;
-    spacing: 2px;
+    padding: @SPOT_PAD_V@px @SPOT_PAD_R@px @SPOT_PAD_V@px @SPOT_PAD_L@px;
+    spacing: @SPOT_GAP@px;
     border: 0px 0px 1px 0px;
     border-color: rgba(255, 255, 255, 10%);
 }
@@ -49,14 +45,14 @@ inputbar {
 icon-search {
     expand: false;
     filename: "system-search-symbolic";
-    size: 16px;
+    size: @SPOT_ICON@px;
     vertical-align: 0.5;
 }
 
 entry {
     placeholder: "Spotlight Search";
     placeholder-color: rgba(255, 255, 255, 45%);
-    font: "@FONT_UI@ 10";
+    font: "@FONT_UI@ @SPOT_FONT_PT@";
     vertical-align: 0.5;
     cursor: text;
 }

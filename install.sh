@@ -237,9 +237,11 @@ mod_launcher() {
   if ! have rofi; then warn "rofi is not installed: sudo apt install rofi (Spotlight search needs it)"; return 0; fi
   have qalc || warn "qalc missing: calculator and currency need it (sudo apt install qalc)"
   have plocate || warn "plocate missing: file search needs it (sudo apt install plocate)"
-  tx "$REPO_DIR/assets/launcher/spotlight.rasi" "$dir/spotlight.rasi"
-  # the rofi theme uses the icon theme and UI font from config
-  run sed -i -e "s|@ICON_THEME@|$ICON_THEME|" -e "s|@FONT_UI@|$FONT_UI|g" -e "s|@SPOT_R@|$MENU_R|" -e "s|@ACCENT@|$ACCENT|g" "$dir/spotlight.rasi"
+  # sizes are percentages of the Figma reference, turned into pixels for this screen
+  local tmp; tmp="$(mktemp)"
+  run python3 "$REPO_DIR/lib/launcher.py" "$REPO_DIR/assets/launcher/spotlight.rasi" "$tmp"
+  run sed -i -e "s|@ICON_THEME@|$ICON_THEME|" -e "s|@FONT_UI@|$FONT_UI|g" -e "s|@ACCENT@|$ACCENT|g" "$tmp"
+  backup "$dir/spotlight.rasi"; run mkdir -p "$dir"; run cp "$tmp" "$dir/spotlight.rasi"; rm -f "$tmp"
   for f in spotlight-files spotlight-calc; do install_file "$REPO_DIR/assets/launcher/$f" "$dir/$f"; run chmod +x "$dir/$f"; done
   install_file "$REPO_DIR/assets/launcher/spotlight" "$HOME/.local/bin/spotlight"
   run chmod +x "$HOME/.local/bin/spotlight"
