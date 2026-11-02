@@ -66,9 +66,9 @@
       "files",
       "browser",
       "ide",
-      "downloads",
-      "|",
       "settings",
+      "|",
+      "downloads",
       "trash"
     ],
     "_apps": "Known ids: files, browser, settings, trash, downloads, ide; \"|\" draws the separator (Figma dock) (older ids finder, chrome, fdm, idea still work). Add your own with entries like {\"name\":\"Terminal\",\"exec\":\"qterminal\",\"icon\":\"utilities-terminal\"}.",

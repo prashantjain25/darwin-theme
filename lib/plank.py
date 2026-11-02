@@ -39,6 +39,9 @@ def main():
     ap.add_argument("--ring", type=int, default=1)
     ap.add_argument("--radius", type=int, default=15)
     ap.add_argument("--padding", type=int, default=8)
+    ap.add_argument("--top-pad", type=float, default=10)
+    ap.add_argument("--bottom-pad", type=float, default=11)
+    ap.add_argument("--item-gap", type=float, default=9)
     ap.add_argument("--dock-mode", default="reserve")
     ap.add_argument("--app", action="append", default=[])
     a = ap.parse_args()
@@ -65,13 +68,13 @@ InnerStrokeColor={inner}
 
 [PlankDockTheme]
 HorizPadding={tenths(a.padding)}
-TopPadding={tenths(10)}
-BottomPadding={tenths(11)}
-ItemPadding={tenths(9)}
+TopPadding={tenths(a.top_pad)}
+BottomPadding={tenths(a.bottom_pad)}
+ItemPadding={tenths(a.item_gap)}
 IndicatorSize=5
 IconShadowSize=0
 UrgentBounceHeight=1.6666666666666667
-LaunchBounceHeight=0.625
+LaunchBounceHeight=0
 FadeOpacity=1
 ClickTime=300
 UrgentBounceTime=600

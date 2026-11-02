@@ -196,10 +196,13 @@ if [ "$WANT_DOCK" = 1 ] && [ "$DOCK_BACKEND" = plank ]; then
   step "Plank dock"
   backup "$HOME/.local/share/plank/themes/GoldenGate"; backup "$HOME/.config/plank/dock1/launchers"
   PA=(--home "$HOME" --mode "$MODE" --dock-mode "$DOCK_MODE" --icon-size "$DOCK_ICON" --fill "$DOCK_FILL" --opacity "$DOCK_OPACITY" \
-      --border "$DOCK_BORDER" --ring "$DOCK_RING" --radius "$DOCK_RADIUS" --padding "$DOCK_PADDING")
+      --border "$DOCK_BORDER" --ring "$DOCK_RING" --radius "$DOCK_RADIUS_PX" --padding "$DOCK_PAD_PX" \
+      --top-pad "$DOCK_TOP_PAD" --bottom-pad "$DOCK_BOTTOM_PAD" --item-gap "$DOCK_GAP")
   for d in "${DESKTOPS[@]}"; do PA+=(--app "$d"); done
   if [ "$DRY_RUN" = 1 ]; then info "[dry-run] python3 lib/plank.py ${PA[*]}"; else
     SETTINGS="$(python3 "$REPO_DIR/lib/plank.py" "${PA[@]}")"
+    # Plank rewrites its item order when it exits, so stop it before the settings are written
+    [ "${GG_NO_RESTART:-0}" = 1 ] || pkill -x plank 2>/dev/null || true
     if have gsettings && [ "${GG_SKIP_GSETTINGS:-0}" != 1 ]; then
       while IFS=$'\t' read -r k v; do
         gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ "$k" "$v" 2>/dev/null || warn "plank setting $k not applied (is plank installed?)"

@@ -147,6 +147,10 @@ def resolve(cfg):
         "DOCK_RING": int(bool(cfg["dock"]["style"]["ring"])),
         "DOCK_RADIUS": cfg["dock"]["style"]["radius"],
         "DOCK_PADDING": cfg["dock"]["style"]["padding"],
+        "DOCK_RADIUS_PX": round(cfg["dock"]["style"]["radius"] * dock_scale(cfg)),
+        "DOCK_PAD_PX": round(cfg["dock"]["style"]["padding"] * dock_scale(cfg)),
+        "DOCK_TOP_PAD": round(10 * dock_scale(cfg)),
+        "DOCK_BOTTOM_PAD": round(11 * dock_scale(cfg)),
         "DOCK_OFFSET": cfg["dock"]["style"]["offset"],
         "DOCK_BLUR": int(bool(cfg["dock"]["style"]["blur"])),
     }
