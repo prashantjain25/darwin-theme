@@ -6,4 +6,11 @@
     border-radius: 8px;
     background: transparent;
 }
-#QuickLaunch QToolButton:hover, #QuickLaunch QToolButton:pressed { background: transparent; }
+/* hover and press keep the icon in place: no padding change (the base panel rules add 4px) */
+#QuickLaunch QToolButton:hover, #QuickLaunch QToolButton:pressed {
+    background: transparent;
+    padding: 0px;
+    margin: 0px 3px;
+    border: none;
+    border-radius: 8px;
+}
