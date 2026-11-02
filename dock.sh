@@ -207,7 +207,7 @@ if [ "$WANT_DOCK" = 1 ] && [ "$DOCK_BACKEND" = plank ]; then
       mkdir -p "$(dirname "$SEP_SVG")" "$APPS_DIR"
       printf '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d"><rect x="%d" y="0" width="1" height="%d" fill="#404042"/></svg>\n' \
         "$DOCK_ICON" "$DOCK_ICON" $((DOCK_ICON / 2)) "$DOCK_ICON" > "$SEP_SVG"
-      printf '[Desktop Entry]\nType=Application\nName= \nExec=true\nIcon=%s\nTerminal=false\n' "$SEP_SVG" > "$SEP_DESK"
+      printf '[Desktop Entry]\nType=Application\nName=\nExec=true\nIcon=%s\nTerminal=false\n' "$SEP_SVG" > "$SEP_DESK"
     fi
   fi
   for i in "${!DESKTOPS[@]}"; do
