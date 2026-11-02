@@ -68,6 +68,11 @@ if [ -n "$DOCK_MODE_FLAG" ]; then
   exit 0
 fi
 
+# Plank is only used when it is installed; otherwise keep the LXQt dock so the screen edge never goes empty
+if [ "$DOCK_BACKEND" = plank ] && ! have plank; then
+  warn "dock.backend is 'plank' but plank is not installed: using the LXQt dock instead"
+  DOCK_BACKEND=lxqt-panel
+fi
 [ "$BAR_ENABLED" = 1 ] || WANT_BAR=0
 [ "$DOCK_ENABLED" = 1 ] || WANT_DOCK=0
 [ "$WANT_BAR$WANT_DOCK" = 00 ] && die "menu bar and dock are both disabled in config/theme.json"
