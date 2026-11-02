@@ -49,8 +49,9 @@ def main():
     light = a.mode == "light"
     fill = a.fill or ("#f6f6f6" if light else "#4a4a4a")
     opacity = a.opacity if a.opacity >= 0 else (36 if light else 39)
-    inner = rgba("#1a1a1a", 46 if light else 100) if a.border else rgba(fill, opacity)
-    outer = rgba("#000000", 15 if light else 20) if a.ring else rgba(fill, 0)
+    # dark theme: rims are white tints, never black (see the theme's border rule)
+    inner = rgba("#1a1a1a", 46) if (a.border and light) else rgba("#ffffff", 16) if a.border else rgba(fill, opacity)
+    outer = rgba("#000000", 15) if (a.ring and light) else rgba("#ffffff", 8) if a.ring else rgba(fill, 0)
 
     def tenths(px):
         return round(px / a.icon_size * 10, 3)
