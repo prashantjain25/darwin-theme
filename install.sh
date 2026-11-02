@@ -5,7 +5,7 @@ set -euo pipefail
 # shellcheck source=lib/common.sh
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
-ALL_MODULES="fonts fontconfig kvantum gtk openbox switcher lxqt picom pcmanfm lapce"
+ALL_MODULES="fonts fontconfig kvantum gtk openbox switcher lxqt picom pcmanfm launcher lapce"
 ONLY=""; SKIP=""; CONFIGURE=0; NO_RESTART=0; PCMANFM_DETAILED=0
 
 usage() {
@@ -56,7 +56,7 @@ mkdir -p "$STATE_DIR" 2>/dev/null || true
 check_deps() {
   step "Checking dependencies"
   local c
-  for c in python3 curl unzip git fc-cache fc-list openbox picom lxqt-panel pcmanfm-qt kvantummanager \
+  for c in python3 curl unzip git fc-cache fc-list openbox picom lxqt-panel pcmanfm-qt kvantummanager rofi \
            gresource glib-compile-resources gtk-update-icon-cache gsettings xprop; do need_cmd "$c"; done
   if want switcher && [ "$SWITCHER_DIALOG" = icons ]; then
     if ! /usr/bin/python3 -c "import PyQt6" 2>/dev/null; then MISSING_PKGS+=(python3-pyqt6); fi
@@ -229,6 +229,23 @@ mod_lxqt() {
   run python3 "$REPO_DIR/lib/ini.py" "$lc" Appearance "icon_theme=$ICON_THEME" "widget_style=kvantum"
   run python3 "$REPO_DIR/lib/ini.py" "$lc" Qt "style=kvantum" \
       "font=\"$FONT_UI,$FONT_SIZE,-1,5,400,0,0,0,0,0,0,0,0,0,0,1\""
+}
+
+mod_launcher() {
+  step "Spotlight search (Super+Space)"
+  local dir="$HOME/.local/share/golden-gate-lxqt-theme"
+  if ! have rofi; then warn "rofi is not installed: sudo apt install rofi (Spotlight search needs it)"; return 0; fi
+  have qalc || warn "qalc missing: calculator and currency need it (sudo apt install qalc)"
+  have plocate || warn "plocate missing: file search needs it (sudo apt install plocate)"
+  tx "$REPO_DIR/assets/launcher/spotlight.rasi" "$dir/spotlight.rasi"
+  # the rofi theme uses the icon theme and UI font from config
+  run sed -i -e "s|@ICON_THEME@|$ICON_THEME|" -e "s|@FONT_UI@|$FONT_UI|g" -e "s|@SPOT_R@|$MENU_R|" "$dir/spotlight.rasi"
+  for f in spotlight-files spotlight-calc; do install_file "$REPO_DIR/assets/launcher/$f" "$dir/$f"; run chmod +x "$dir/$f"; done
+  install_file "$REPO_DIR/assets/launcher/spotlight" "$HOME/.local/bin/spotlight"
+  run chmod +x "$HOME/.local/bin/spotlight"
+  backup "$HOME/.config/openbox/rc.xml"
+  run python3 "$REPO_DIR/lib/openbox_rc.py" keybind "$HOME/.config/openbox/rc.xml" "W-space" "$HOME/.local/bin/spotlight"
+  [ "$DRY_RUN" = 0 ] && openbox --reconfigure 2>/dev/null || true
 }
 
 mod_picom() {

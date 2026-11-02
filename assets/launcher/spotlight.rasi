@@ -1,0 +1,92 @@
+/* Spotlight-style launcher (rofi). Sizes from the macOS Spotlight reference:
+   680 px wide, 14 px corners, 1 px hairline, search field Inter 19, 7 result lines,
+   30 px result icons, 7 px / 12 px row padding. Colours follow the dark theme. */
+configuration {
+    modi: "drun";
+    show-icons: true;
+    icon-theme: "@ICON_THEME@";
+    drun-display-format: "{name}";
+    display-drun: "";
+    font: "@FONT_UI@ 13";
+    hover-select: true;
+    click-to-exit: true;
+}
+
+* {
+    background-color: transparent;
+    text-color: #f5f5f5;
+}
+
+window {
+    location: north;
+    anchor: north;
+    y-offset: 22%;
+    width: 680px;
+    border: 1px;
+    border-radius: @SPOT_R@px;
+    border-color: rgba(255, 255, 255, 18%);
+    background-color: rgba(40, 40, 44, 96%);
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    spacing: 0px;
+}
+
+inputbar {
+    children: [ icon-search, entry ];
+    padding: 14px 18px;
+    spacing: 12px;
+    border: 0px 0px 1px 0px;
+    border-color: rgba(255, 255, 255, 10%);
+}
+
+icon-search {
+    expand: false;
+    filename: "system-search-symbolic";
+    size: 24px;
+    vertical-align: 0.5;
+}
+
+entry {
+    placeholder: "Spotlight Search";
+    placeholder-color: rgba(255, 255, 255, 45%);
+    font: "@FONT_UI@ 19";
+    vertical-align: 0.5;
+    cursor: text;
+}
+
+listview {
+    lines: 7;
+    fixed-height: false;
+    scrollbar: false;
+    padding: 6px;
+    spacing: 2px;
+}
+
+element {
+    padding: 7px 12px;
+    spacing: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+element selected.normal {
+    background-color: @ACCENT@;
+    text-color: #ffffff;
+}
+
+element-text selected {
+    text-color: #ffffff;
+}
+
+element-icon {
+    size: 30px;
+    vertical-align: 0.5;
+    cursor: inherit;
+}
+
+element-text {
+    vertical-align: 0.5;
+    cursor: inherit;
+}

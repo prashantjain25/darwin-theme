@@ -22,7 +22,21 @@ def patch(path, theme, size, font="Inter", switcher="icons"):
     open(path, "w", encoding="utf-8").write(t)
 
 
+def add_keybind(path, key, command):
+    """add <keybind key=KEY> running COMMAND to rc.xml unless it is already bound to that key"""
+    t = open(path, encoding="utf-8").read()
+    if re.search(r'<keybind key="%s">' % re.escape(key), t):
+        return
+    block = ('  <keybind key="%s">\n    <action name="Execute">\n      <command>%s</command>\n'
+             '    </action>\n  </keybind>\n') % (key, command)
+    t = t.replace("</keyboard>", block + "  </keyboard>", 1)
+    open(path, "w", encoding="utf-8").write(t)
+
+
 if __name__ == "__main__":
+    if len(sys.argv) >= 2 and sys.argv[1] == "keybind":
+        add_keybind(sys.argv[2], sys.argv[3], sys.argv[4])
+        sys.exit(0)
     if len(sys.argv) < 3:
         sys.exit(__doc__)
     patch(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else "10",

@@ -1,0 +1,9 @@
+#!/bin/sh
+# Spotlight-style launcher: apps, files and calculator/currency in one list (rofi).
+# Toggle: running it again closes it. Bound to Super+Space by install.sh.
+if pgrep -x rofi >/dev/null; then pkill -x rofi; exit 0; fi
+DIR="$HOME/.local/share/golden-gate-lxqt-theme"
+exec rofi -show combi \
+  -modi "combi,files:$DIR/spotlight-files,calc:$DIR/spotlight-calc" \
+  -combi-modi "drun,files:$DIR/spotlight-files,calc:$DIR/spotlight-calc" \
+  -theme "$DIR/spotlight.rasi"

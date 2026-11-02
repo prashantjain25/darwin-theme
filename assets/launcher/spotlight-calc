@@ -1,0 +1,6 @@
+#!/bin/sh
+# Calculator and currency conversion for the Spotlight launcher (libqalculate).
+# Examples: "2+3*4", "sqrt(2)", "100 USD to EUR" (rates come from the internet, qalc updates them).
+if [ -z "$1" ]; then echo "Type a calculation, e.g. 100 USD to EUR"; exit 0; fi
+command -v qalc >/dev/null || { echo "install qalc: sudo apt install qalc"; exit 0; }
+qalc -t "$1" 2>/dev/null | head -1

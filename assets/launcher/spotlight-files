@@ -1,0 +1,6 @@
+#!/bin/sh
+# File search for the Spotlight launcher (plocate index). Enter opens the selected file.
+if [ "${ROFI_RETV:-0}" != 0 ] && [ -e "$1" ]; then xdg-open "$1" >/dev/null 2>&1 & exit 0; fi
+if [ -z "$1" ]; then echo "Type a file name"; exit 0; fi
+command -v plocate >/dev/null || { echo "install plocate: sudo apt install plocate"; exit 0; }
+plocate -i -l 40 -- "$1" 2>/dev/null
