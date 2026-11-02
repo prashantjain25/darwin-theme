@@ -156,6 +156,28 @@ class InstallerTests(unittest.TestCase):
         self.assertTrue((data / 'aurorae/themes/Darwin-Dark').is_dir())
         self.assertTrue((data / 'plasma/plasmoids/com.prashantjain25.darwin.dock/metadata.json').is_file())
 
+    def test_tool_checks_never_walk_whole_library_folders(self):
+        """A recursive search of /usr/lib took seconds per process and stalled CI; keep the checks targeted."""
+        import glob
+        import importlib.util
+        import time
+        spec = importlib.util.spec_from_file_location('kde_under_test', ROOT / 'lib/kde.py')
+        sys.path.insert(0, str(ROOT / 'lib'))
+        kde = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(kde)
+        calls, real = [], glob.glob
+        glob.glob = lambda *a, **k: calls.append(k.get('recursive')) or real(*a, **k)
+        try:
+            started = time.monotonic()
+            kde.rounded_effect_installed.__wrapped__()
+            kde.kvantum_available.__wrapped__()
+            elapsed = time.monotonic() - started
+        finally:
+            glob.glob = real
+        self.assertTrue(calls, 'the checks should search for the plugins')
+        self.assertNotIn(True, calls, 'recursive searches are too slow')
+        self.assertLess(elapsed, 1.0)
+
     def test_install_rejects_symlink_parents_and_preserves_original_dotfiles(self):
         for root, parent, filename in [('config', 'gtk-3.0', 'settings.ini'),
                                        ('data', 'color-schemes', 'DarwinDark.colors')]:

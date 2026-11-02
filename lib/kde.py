@@ -273,13 +273,15 @@ ROUNDED_APT = ['git', 'cmake', 'g++', 'extra-cmake-modules', 'kwin-dev', 'qt6-ba
 
 @functools.lru_cache(maxsize=None)
 def rounded_effect_installed():
-    """The KWin effect that rounds the bottom window corners (Aurorae already rounds the top)."""
+    """The KWin effect that rounds the bottom window corners (Aurorae already rounds the top).
+
+    Only the usual plugin folders are checked. A recursive search of /usr/lib takes seconds, which made
+    every start slow on systems without the effect.
+    """
     import glob
-    patterns = ['/usr/lib*/qt6/plugins/kwin/effects/plugins/kwin4_effect_shapecorners.so',
-                '/usr/lib*/*/qt6/plugins/kwin/effects/plugins/kwin4_effect_shapecorners.so',
-                '/usr/local/lib*/**/kwin4_effect_shapecorners.so',
-                str(Path.home() / '.local/lib*/**/kwin4_effect_shapecorners.so')]
-    return any(glob.glob(pattern, recursive=True) for pattern in patterns)
+    name = 'qt6/plugins/kwin/effects/plugins/kwin4_effect_shapecorners.so'
+    roots = ['/usr/lib*', '/usr/lib*/*', '/usr/local/lib*', '/usr/local/lib*/*', str(Path.home() / '.local/lib*'), str(Path.home() / '.local/lib*/*')]
+    return any(glob.glob(f'{root}/{name}') for root in roots)
 
 
 def install_rounded_effect(args):
@@ -337,7 +339,7 @@ def qt_launcher_available():
 @functools.lru_cache(maxsize=None)
 def kvantum_available():
     import glob
-    return bool(shutil.which('kvantummanager')) or bool(glob.glob('/usr/lib*/**/plugins/styles/libkvantum.so', recursive=True))
+    return bool(shutil.which('kvantummanager')) or any(glob.glob(f'{root}/qt6/plugins/styles/libkvantum.so') for root in ('/usr/lib*', '/usr/lib*/*'))
 
 
 @functools.lru_cache(maxsize=None)

@@ -5,6 +5,7 @@ permissions:
 jobs:
   theme-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 10   # a stuck test must fail with a readable log, not run for hours
     steps:
       - uses: actions/checkout@v4
         with:
@@ -15,5 +16,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python3 -m unittest discover -s tests -v
+      - run: python3 -X faulthandler -m unittest discover -s tests -v
+        timeout-minutes: 8
       - run: bash -n install.sh dock.sh restore.sh install-lxqt.sh dock-lxqt.sh restore-lxqt.sh
