@@ -29,7 +29,7 @@ def detect():
 if __name__ == "__main__":
     model, has_super, apple = detect()
     if sys.argv[1:] == ["modifier"]:
-        print("W")   # the Windows/Super key is always used for the launcher, as requested
+        print("W")   # the Windows/Super key is always used for the launcher shortcuts
     elif sys.argv[1:] == ["describe"]:
         kind = "Apple (Command key)" if apple else ("Windows/Linux (Super key)" if has_super else "no Super key")
         print("%s, model %s" % (kind, model))
