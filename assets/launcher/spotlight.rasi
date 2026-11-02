@@ -1,6 +1,12 @@
-/* Spotlight-style launcher (rofi). Sizes come from the Figma macOS 26 kit only:
-   Search Field: 6 px radius, 8 px left / 4 px right padding, 2 px icon gap,
-   16 px magnifying glass, SF text 13 px (= Inter 10 pt). Colours follow the dark theme. */
+/* Spotlight-style launcher (rofi). Source: Figma macOS 26 kit, Search Field component (120 x 24 px).
+   All metrics as a percentage of that field:
+     corner radius      6 px  = 25 % of its height
+     left padding       8 px  = 6.7 % of its width
+     right padding      4 px  = 3.3 % of its width
+     icon gap           2 px  = 1.7 % of its width
+     magnifying glass  16 px  = 66.7 % of its height (16 x 15 in Figma)
+     text               13 px = 54 % of its height (SF 13 px, here Inter 10 pt)
+   The values below are the px equivalents of those percentages at the Figma size. */
 configuration {
     modi: "drun";
     show-icons: true;
