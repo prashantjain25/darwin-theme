@@ -198,7 +198,22 @@ if [ "$WANT_DOCK" = 1 ] && [ "$DOCK_BACKEND" = plank ]; then
   PA=(--home "$HOME" --mode "$MODE" --dock-mode "$DOCK_MODE" --icon-size "$DOCK_ICON" --fill "$DOCK_FILL" --opacity "$DOCK_OPACITY" \
       --border "$DOCK_BORDER" --ring "$DOCK_RING" --radius "$DOCK_RADIUS_PX" --padding "$DOCK_PAD_PX" \
       --top-pad "$DOCK_TOP_PAD" --bottom-pad "$DOCK_BOTTOM_PAD" --item-gap "$DOCK_GAP")
-  for d in "${DESKTOPS[@]}"; do PA+=(--app "$d"); done
+  # Plank has no separator item, so the separator is a do-nothing launcher whose icon is a 1 px line.
+  SEP_DESK=""
+  if [ "$SEP_AFTER" -gt 0 ]; then
+    SEP_DESK="$APPS_DIR/golden-gate-dock-separator.desktop"
+    SEP_SVG="$HOME/.local/share/golden-gate-lxqt-theme/dock-separator.svg"
+    if [ "$DRY_RUN" = 0 ]; then
+      mkdir -p "$(dirname "$SEP_SVG")" "$APPS_DIR"
+      printf '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d"><rect x="%d" y="0" width="1" height="%d" fill="#404042"/></svg>\n' \
+        "$DOCK_ICON" "$DOCK_ICON" $((DOCK_ICON / 2)) "$DOCK_ICON" > "$SEP_SVG"
+      printf '[Desktop Entry]\nType=Application\nName= \nExec=true\nIcon=%s\nTerminal=false\n' "$SEP_SVG" > "$SEP_DESK"
+    fi
+  fi
+  for i in "${!DESKTOPS[@]}"; do
+    if [ "$i" -eq "$SEP_AFTER" ] && [ -n "$SEP_DESK" ]; then PA+=(--app "$SEP_DESK"); fi
+    PA+=(--app "${DESKTOPS[$i]}")
+  done
   if [ "$DRY_RUN" = 1 ]; then info "[dry-run] python3 lib/plank.py ${PA[*]}"; else
     SETTINGS="$(python3 "$REPO_DIR/lib/plank.py" "${PA[@]}")"
     # Plank rewrites its item order when it exits, so stop it before the settings are written

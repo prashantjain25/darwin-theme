@@ -14,8 +14,8 @@ with  value = px / icon_size * 10.  The design kit's dock: padding 8 px (sides),
 11 px (bottom), 9 px between items, fill and 1 px strokes as given in the arguments.
 Dock behaviour (--dock-mode): reserve and always-on-top both map to hide-mode 'none' (Plank always
 reserves its space then), intelligent-hide to 'intelligent', auto-hide to 'auto' with pressure reveal.
-Not supported by Plank, and therefore ignored: the 5 px offset from the screen edge and
-the separator between the app groups.
+Not supported by Plank, and therefore ignored: the 5 px offset from the screen edge.
+The separator is a do-nothing launcher whose icon is a 1 px line (added by dock.sh).
 """
 import argparse
 import os
