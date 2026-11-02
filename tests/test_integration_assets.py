@@ -40,10 +40,10 @@ function run(options) {
   return ps[0].ws.find(w=>w.type==='org.kde.plasma.digitalclock');
 }
 const plain=run({}), dated=run({clockDate:true});
-if(plain.showDate!==false||plain.fontSize!==10)throw Error('time-only clock: '+plain.showDate+' '+plain.fontSize);
+if(plain.showDate!==false||plain.fontSize!==7)throw Error('time-only clock: '+plain.showDate+' '+plain.fontSize);
 if(plain.fontWeight!==400||plain.fontStyleName!=='Regular')throw Error('clock must use the regular interface weight');
-const big=run({fontSize:12}); if(big.fontSize!==12)throw Error('clock must follow the interface font size');
-if(dated.showDate!==true||dated.fontSize!==9)throw Error('dated clock: '+dated.showDate+' '+dated.fontSize);
+const big=run({fontSize:12}); if(big.fontSize!==8)throw Error('clock must follow the interface font size (x0.7)');
+if(dated.showDate!==true||dated.fontSize!==7)throw Error('dated clock: '+dated.showDate+' '+dated.fontSize);
 console.log('PASS');
 '''
         result = subprocess.run(['node', '-e', harness, str(ROOT / 'assets/layout.js')], capture_output=True, text=True)

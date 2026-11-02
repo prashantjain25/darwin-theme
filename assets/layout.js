@@ -42,11 +42,12 @@
     clock.writeConfig('customDateFormat', 'ddd MMM d');
     clock.writeConfig('use24hFormat', 0);
     clock.writeConfig('fontFamily', options.font || 'Inter');
-    // Same font, size and weight as the rest of the desktop (the interface font), so the clock does not stand out.
+    // Same font, size and weight as the rest of the desktop. The clock draws its size setting about 1.4 times
+    // larger than the menus do (measured: size 10 gave 12 px digits next to 9 px menu capitals; size 7 gives 9),
+    // so the setting is the interface size times 0.7. That is also small enough for the date to fit on one line.
     var uiSize = options.fontSize || 10;
     clock.writeConfig('autoFontAndSize', false);
-    // With the date shown the clock needs one point less to stay on one line (10:xx to 12:xx otherwise stacks).
-    clock.writeConfig('fontSize', options.clockDate === true ? Math.min(9, uiSize) : uiSize);
+    clock.writeConfig('fontSize', Math.round(uiSize * 0.7));
     clock.writeConfig('fontWeight', 400);
     clock.writeConfig('fontStyleName', 'Regular');
     clock.writeConfig('dateDisplayFormat', 'BesideTime');
