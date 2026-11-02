@@ -72,6 +72,8 @@
     "custom": [],
     "mode": "reserve",
     "_mode": "How the dock behaves: 'reserve' = reserves its space, windows never cover it; 'always-on-top' = floats above windows without reserving space; 'intelligent-hide' = hides only while a window overlaps it; 'auto-hide' = always hidden, move the pointer to the screen edge to show it. Switch quickly with: ./dock.sh --dock-mode <mode>",
+    "scale": "auto",
+    "_scale": "Dock size follows the screen like the macOS dock does. 'auto' = primary screen width / 1512 (the Figma reference width), so a 1920 px screen gives 1.27. Or a number such as 1.0 to keep the Figma pixel sizes.",
     "backend": "lxqt-panel",
     "_backend": "'lxqt-panel' (default) or 'plank' (experimental, needs: sudo apt install plank). The LXQt panel paints its window opaque, so border, outer ring, rounded corners, edge offset and blur need Plank.",
     "style": {

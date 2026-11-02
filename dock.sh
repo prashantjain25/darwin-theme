@@ -170,8 +170,8 @@ PY
   )
   [ "${#DESKTOPS[@]}" -gt 0 ] || die "no dock launchers could be created"
   # Figma dock: 9 px between items, 8 px edge padding; measured with the panel's own button margins
-  if [ "$DOCK_W" = auto ]; then DOCK_W=$(( ${#DESKTOPS[@]} * (DOCK_ICON + 9) + 19 + (SEP_AFTER > 0 ? 8 : 0) )); fi
-  info "dock width: ${DOCK_W}px for ${#DESKTOPS[@]} launchers"
+  if [ "$DOCK_W" = auto ]; then DOCK_W=$(( ${#DESKTOPS[@]} * (DOCK_ICON + DOCK_GAP) + DOCK_EDGE + (SEP_AFTER > 0 ? DOCK_SEP_PAD : 0) )); fi
+  info "dock: ${DOCK_W}x${DOCK_H} px, ${DOCK_ICON} px icons (scale ${DOCK_SCALE} for this screen)"
 fi
 
 # ---------------------------------------------------------------- panel layout

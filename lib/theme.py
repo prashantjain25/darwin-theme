@@ -70,6 +70,28 @@ def mix(alpha, base_rgb, bg):
     return "#%02x%02x%02x" % tuple(round((1 - alpha) * bg + alpha * c) for c in base_rgb)
 
 
+REFERENCE_WIDTH = 1512   # Figma kit frame width (pt); dock reference: 62 px high, 36 px icons, 9 px gap
+
+
+def screen_width():
+    """width in pixels of the primary output, from xrandr; None if unknown"""
+    import subprocess
+    try:
+        out = subprocess.run(["xrandr"], capture_output=True, text=True, timeout=5).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None
+    m = re.search(r"(\d+)x\d+\+\d+\+\d+", next((l for l in out.splitlines() if " connected primary" in l), ""))
+    return int(m.group(1)) if m else None
+
+
+def dock_scale(cfg):
+    s = cfg["dock"]["scale"]
+    if s == "auto":
+        w = screen_width()
+        return (w / REFERENCE_WIDTH) if w else 1.0
+    return float(s)
+
+
 def resolve(cfg):
     pal = palette(cfg)
     light = cfg["mode"] == "light"
@@ -112,6 +134,12 @@ def resolve(cfg):
         "DOCK_W": cfg["dock"]["width"],
         "DOCK_APPS": " ".join(cfg["dock"]["apps"]),
         "DOCK_BACKEND": cfg["dock"]["backend"],
+        "DOCK_SCALE": round(dock_scale(cfg), 3),
+        "DOCK_H": round(62 * dock_scale(cfg)),
+        "DOCK_ICON": round(cfg["dock"]["icon_size"] * dock_scale(cfg)),
+        "DOCK_GAP": round(9 * dock_scale(cfg)),
+        "DOCK_EDGE": round(19 * dock_scale(cfg)),
+        "DOCK_SEP_PAD": round(8 * dock_scale(cfg)),
         "DOCK_MODE": norm_mode(cfg["dock"]["mode"]),
         "DOCK_FILL": cfg["dock"]["style"]["fill"] if cfg["dock"]["style"]["fill"] != "auto" else ("#f6f6f6" if light else "#4a4a4a"),
         "DOCK_OPACITY": cfg["dock"]["style"]["opacity"] if cfg["dock"]["style"]["opacity"] != "auto" else (36 if light else 39),
