@@ -244,7 +244,12 @@ mod_launcher() {
   install_file "$REPO_DIR/assets/launcher/spotlight" "$HOME/.local/bin/spotlight"
   run chmod +x "$HOME/.local/bin/spotlight"
   backup "$HOME/.config/openbox/rc.xml"
-  for kb in "W-space:apps" "W-S-space:files" "W-C-space:calc"; do
+  local base apps_key files_key calc_key
+  base="$(python3 "$REPO_DIR/lib/keyboard.py" modifier)"   # W = Super/Command, C-A = Ctrl+Alt on keyboards without Super
+  apps_key="$base-space"; files_key="$base-S-space"; calc_key="$base-C-space"
+  info "keyboard: $(python3 "$REPO_DIR/lib/keyboard.py" describe)"
+  info "shortcuts: apps $apps_key, files $files_key, calculator $calc_key"
+  for kb in "$apps_key:apps" "$files_key:files" "$calc_key:calc"; do
     run python3 "$REPO_DIR/lib/openbox_rc.py" keybind "$HOME/.config/openbox/rc.xml" "${kb%%:*}" "$HOME/.local/bin/spotlight ${kb##*:}"
   done
   [ "$DRY_RUN" = 0 ] && openbox --reconfigure 2>/dev/null || true
