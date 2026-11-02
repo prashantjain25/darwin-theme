@@ -42,11 +42,13 @@
     clock.writeConfig('customDateFormat', 'ddd MMM d');
     clock.writeConfig('use24hFormat', 0);
     clock.writeConfig('fontFamily', options.font || 'Inter');
+    // Same font, size and weight as the rest of the desktop (the interface font), so the clock does not stand out.
+    var uiSize = options.fontSize || 10;
     clock.writeConfig('autoFontAndSize', false);
-    // With the date, 9 not 10: at 10 the clock stacks time over date once the time needs two digits (10:xx to 12:xx).
-    clock.writeConfig('fontSize', options.clockDate === true ? 9 : 10);
-    clock.writeConfig('fontWeight', 600);
-    clock.writeConfig('fontStyleName', 'SemiBold');
+    // With the date shown the clock needs one point less to stay on one line (10:xx to 12:xx otherwise stacks).
+    clock.writeConfig('fontSize', options.clockDate === true ? Math.min(9, uiSize) : uiSize);
+    clock.writeConfig('fontWeight', 400);
+    clock.writeConfig('fontStyleName', 'Regular');
     clock.writeConfig('dateDisplayFormat', 'BesideTime');
     clock.reloadConfig();   // apply to the running clock now, not only after the next shell restart
     }

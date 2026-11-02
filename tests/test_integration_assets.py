@@ -41,6 +41,8 @@ function run(options) {
 }
 const plain=run({}), dated=run({clockDate:true});
 if(plain.showDate!==false||plain.fontSize!==10)throw Error('time-only clock: '+plain.showDate+' '+plain.fontSize);
+if(plain.fontWeight!==400||plain.fontStyleName!=='Regular')throw Error('clock must use the regular interface weight');
+const big=run({fontSize:12}); if(big.fontSize!==12)throw Error('clock must follow the interface font size');
 if(dated.showDate!==true||dated.fontSize!==9)throw Error('dated clock: '+dated.showDate+' '+dated.fontSize);
 console.log('PASS');
 '''

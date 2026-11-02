@@ -83,7 +83,7 @@ def layout_script(cfg, menubar=True, dock=True, dock_mode=None):
     metrics = dock_metrics(cfg)
     options = {'menubar': menubar and cfg['menubar']['enabled'],
                'dock': dock and cfg['dock']['enabled'],
-               'barHeight': cfg['menubar']['height'], 'font': cfg['fonts']['ui'],
+               'barHeight': cfg['menubar']['height'], 'font': cfg['fonts']['ui'], 'fontSize': cfg['fonts']['ui_size'],
                'hiding': DOCK_MODES[norm_mode(dock_mode or cfg['dock']['mode'])],
                'dockIcon': metrics[0], 'dockHeight': int(metrics[1]),
                'startIcon': start_icon(cfg), 'clockDate': bool(cfg['menubar'].get('show_date', False)),
