@@ -25,19 +25,40 @@ traffic-light window controls, translucent menus and an Alt+Tab window switcher.
 
 ## Requirements
 
-Tested on **Lubuntu 26.04**, with LXQt 2.3, Qt 6, Openbox 3.6 and picom 12.5.
-The window switcher requires an X11 session.
+Tested on **Lubuntu 26.04** (LXQt 2.3, Qt 6, Openbox 3.6, picom 12.5).
+The window switcher and the launcher need an X11 session.
 
-| Component | Package or source |
+Install every package the scripts use with one command:
+
+```bash
+sudo apt install \
+  lxqt lxqt-themes openbox picom pcmanfm-qt \
+  qt5-style-kvantum qt6-style-kvantum \
+  fonts-inter rofi qalc plocate \
+  python3 curl unzip git fontconfig x11-utils x11-xserver-utils xdg-utils \
+  libglib2.0-bin libglib2.0-dev-bin libgtk-3-bin
+```
+
+What each group provides:
+
+| Group | Used for |
 |---|---|
-| Desktop | `lxqt`, `openbox`, `lxqt-panel`, `pcmanfm-qt`, `lxqt-themes` |
-| Window effects | `picom` 12 or later |
-| Qt appearance | `qt5-style-kvantum`, `qt6-style-kvantum` |
-| Installation tools | `python3`, `curl`, `unzip`, `git`, `fontconfig`, `x11-utils`, `libglib2.0-bin`, `libglib2.0-dev-bin`, `libgtk-3-bin` |
-| GTK theme | [WhiteSur GTK](https://github.com/vinceliuice/WhiteSur-gtk-theme) |
-| Icons | [WhiteSur icons](https://github.com/vinceliuice/WhiteSur-icon-theme) |
-| Inter | Included |
-| Maple Mono NF | Installed automatically |
+| `lxqt`, `lxqt-themes`, `pcmanfm-qt` | the desktop, panels, file manager and the `sombre-et-rond` theme |
+| `openbox`, `picom` | window decoration, shortcuts and window effects |
+| `qt5-style-kvantum`, `qt6-style-kvantum` | Qt app appearance (Kvantum) |
+| `fonts-inter` | interface font |
+| `rofi`, `qalc`, `plocate` | Spotlight-style launcher: apps, calculator and currency, file search |
+| `python3`, `curl`, `unzip`, `git`, `fontconfig` | installer scripts and font setup |
+| `x11-utils`, `x11-xserver-utils` | `xprop`, `xwininfo`, `xrandr`, `setxkbmap`, `xmodmap` |
+| `xdg-utils` | `xdg-open` for file search results |
+| `libglib2.0-bin`, `libglib2.0-dev-bin`, `libgtk-3-bin` | GTK theme build and `gsettings` |
+
+Also needed for the GTK theme and icons (installed by `--install-deps`, or by hand):
+
+- [WhiteSur GTK theme](https://github.com/vinceliuice/WhiteSur-gtk-theme)
+- [WhiteSur icon theme](https://github.com/vinceliuice/WhiteSur-icon-theme)
+
+The installer checks these and tells you what is missing. Check the packages after installing with `./install.sh --dry-run`.
 
 ## Install
 
