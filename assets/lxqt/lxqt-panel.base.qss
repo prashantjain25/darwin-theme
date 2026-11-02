@@ -14,7 +14,13 @@
 LXQtPanel #BackgroundWidget {
     background-color: rgba(20, 20, 20, 67%);
     border-radius: 12px;
-   
+}
+/* menu bar (top edge of the screen): square top corners, only the lower corners are rounded, as on macOS */
+LXQtPanel[position="Top"] #BackgroundWidget {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 QToolTip {
     background:rgba(20, 20, 20, 67%);
