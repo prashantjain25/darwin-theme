@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Pick launcher shortcuts from the keyboard that is actually connected.
 
-usage: keyboard.py modifier    -> Openbox modifier prefix: "W" when a Super/Command key exists,
-                                  otherwise "C-A" (Ctrl+Alt), which every keyboard has
+usage: keyboard.py modifier    -> Openbox modifier prefix: always "W" (Windows/Super key)
        keyboard.py describe    -> one line describing what was detected
 Detection reads the X keyboard map: xmodmap -pm lists the keys bound to Mod4 (Super).
 """
@@ -30,7 +29,7 @@ def detect():
 if __name__ == "__main__":
     model, has_super, apple = detect()
     if sys.argv[1:] == ["modifier"]:
-        print("W" if has_super else "C-A")
+        print("W")   # the Windows/Super key is always used for the launcher, as requested
     elif sys.argv[1:] == ["describe"]:
         kind = "Apple (Command key)" if apple else ("Windows/Linux (Super key)" if has_super else "no Super key")
         print("%s, model %s" % (kind, model))
