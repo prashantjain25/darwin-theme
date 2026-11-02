@@ -23,6 +23,6 @@ rules = (
   { match = "class_g = 'OPENBOX_FOCUS_CYCLE_POPUP'"; corner-radius = @SWITCHER_R@; opacity = @SWITCHER_ALPHA@; },
   { match = "class_i = 'GoldenGateSwitcher'"; corner-radius = @SWITCHER_R@; opacity = 1.0; shadow = false; },
   { match = "class_g = 'lxqt-panel' && height = @DOCK_H@"; corner-radius = 15; opacity = 1.0; blur-background = @DOCK_BLUR_BOOL@; },
-  { match = "class_g = 'Plank'"; blur-background = @DOCK_BLUR_BOOL@; },
+  { match = "class_g = 'Plank'"; blur-background = false; },
   { match = "fullscreen"; corner-radius = 0; }
 );
